@@ -3,8 +3,8 @@ import jsonpickle
 
 class Movie:
 
-    def __init__(self, name, id, year, rated, runtime, genre, director, actors, country, poster, metascore, imdbrating):
-        self.name = name
+    def __init__(self, title, id, year, rated, runtime, genre, director, actors, country, poster, metascore, imdbrating):
+        self.title = title
         self.id = id
         self.year = year
         self.rated = rated
