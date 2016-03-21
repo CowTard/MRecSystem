@@ -2,8 +2,6 @@ import xmlrpc.client
 import requests
 import os
 import zipfile
-import io
-
 
 # Class responsible for handling the connection with OpenSubtitles API
 class OpenSubtitles:
@@ -20,21 +18,30 @@ class OpenSubtitles:
 
     def search_subtitle(self, imdb, movie_name):
         search = self.server.SearchSubtitles(self.token, [{'sublanguageid': self.language, 'imdbid': imdb}])
-        self.download_store_subtitle(movie_name, search['data'][0]['ZipDownloadLink'])
+
+        download_links = []
+        for subtitles in search['data']:
+            download_links.append(subtitles['ZipDownloadLink'])
+
+        for subtitles_link in download_links:
+            if self.download_store_subtitle(movie_name, subtitles_link):
+                break
+            else:
+                continue
 
     def download_store_subtitle(self, movie_name, str_link):
         r = requests.get(str_link)
-
         os.makedirs('subtitles/' + movie_name.replace(' ', '-'), exist_ok=True)
 
-        with open('subtitles/' + movie_name.replace(' ', '-') + '.zip', 'wb') as file:
-            file.write(r.content)
-            file.close()
+        with open('subtitles/' + movie_name.replace(' ', '-') + '.zip', 'wb') as compressed_file:
+            compressed_file.write(r.content)
+            compressed_file.close()
 
-        z = zipfile.ZipFile('subtitles/' + movie_name.replace(' ', '-') + '.zip')
-
-        if zipfile.is_zipfile(z):
+        try:
+            z = zipfile.ZipFile('subtitles/' + movie_name.replace(' ', '-') + '.zip')
             z.extractall(path='subtitles/' + movie_name.replace(' ', '-') + '/')
-
-        print('> ' + movie_name + '\'s subtitle(s) was downloaded and extracted.')
-        # Need to erase zipfiles.
+            print('> ' + movie_name + '\'s subtitle(s) was downloaded and extracted.')
+            return True
+        except zipfile.BadZipFile:
+            print('> ERROR ' + movie_name + '\'s subtitle(s) was NOT downloaded and extracted.')
+            return False

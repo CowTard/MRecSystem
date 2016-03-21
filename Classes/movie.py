@@ -1,5 +1,3 @@
-import jsonpickle
-
 
 class Movie:
 
@@ -16,6 +14,3 @@ class Movie:
         self.poster = poster
         self.metascore = metascore
         self.imdbRating = imdbrating
-
-    def print(self):
-        print(jsonpickle.encode(self, unpicklable=False))
