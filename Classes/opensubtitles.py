@@ -2,6 +2,7 @@ import json
 import os
 import xmlrpc.client
 import zipfile
+import shutil
 
 import requests
 
@@ -53,6 +54,17 @@ class OpenSubtitles:
             z.extractall(path='Subtitles/' + movie_name.replace(' ', '-') + '/')
             z.close()
             os.remove('Subtitles/' + movie_name.replace(' ', '-') + '.zip')
+
+            subtitles_count = 0
+            for file in os.listdir('Subtitles/' + movie_name.replace(' ', '-')):
+                if file.endswith(".srt"):
+                    subtitles_count += 1
+
+            if subtitles_count <= 0:
+                shutil.rmtree('Subtitles/' + movie_name.replace(' ', '-'))
+                print('> ERROR ' + movie_name + ': Too much subtitles or none.')
+                return False
+
             print('> ' + movie_name + '\'s subtitle(s) was downloaded and extracted.')
             return True
         except zipfile.BadZipFile:

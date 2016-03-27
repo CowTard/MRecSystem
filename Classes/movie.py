@@ -1,3 +1,5 @@
+import os
+
 
 class Movie:
 
@@ -14,3 +16,16 @@ class Movie:
         self.poster = poster
         self.metascore = metascore
         self.imdbRating = imdbrating
+
+    # Get subtitles for this movie object.
+    def get_str_files(self):
+        str_files = []
+
+        for file in os.listdir('Subtitles/' + self.title.replace(' ', '-')):
+            if file.endswith(".srt"):
+                str_files.append(file)
+
+        if len(str_files) == 0:
+            print(self.title + " - No str files here . Ups.")
+        return str_files
+

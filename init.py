@@ -3,7 +3,7 @@
 
 import requests
 from lxml import html
-
+import os
 from Classes import movie
 from Classes import opensubtitles
 
@@ -64,8 +64,13 @@ def init():
 
     print('> Login successful.')
     print('> Starting to download subtitles.')
-    for movieObj in movies:
-        open_subtitles.search_subtitle(movieObj.id[2:], movieObj.title)
 
+    if os.listdir('Subtitles/') == []:
+        for movieObj in movies:
+            open_subtitles.search_subtitle(movieObj.id[2:], movieObj.title)
+            movieObj.get_str_files()
+    else:
+        for movieObj in movies:
+            movieObj.get_str_files()
 
 init()
