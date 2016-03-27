@@ -1,8 +1,10 @@
-import xmlrpc.client
-import requests
-import os
-import zipfile
 import json
+import os
+import xmlrpc.client
+import zipfile
+
+import requests
+
 
 # Class responsible for handling the connection with OpenSubtitles API
 class OpenSubtitles:
@@ -14,13 +16,13 @@ class OpenSubtitles:
         self.language = 'eng'
         self.nickname = _secrets['nickname']
         self.password = _secrets['password']
-        self.userAgent = _secrets['password']
+        self.userAgent = _secrets['userAgent']
         self.token = ''
 
         os.makedirs('Subtitles/', exist_ok=True)
 
     def login(self):
-        data = self.server.LogIn('', '', self.language, self.userAgent)
+        data = self.server.LogIn(self.nickname, self.password, self.language, self.userAgent)
         self.token = data['token']
 
     def search_subtitle(self, imdb, movie_name):
@@ -49,6 +51,8 @@ class OpenSubtitles:
         try:
             z = zipfile.ZipFile('Subtitles/' + movie_name.replace(' ', '-') + '.zip')
             z.extractall(path='Subtitles/' + movie_name.replace(' ', '-') + '/')
+            z.close()
+            os.remove('Subtitles/' + movie_name.replace(' ', '-') + '.zip')
             print('> ' + movie_name + '\'s subtitle(s) was downloaded and extracted.')
             return True
         except zipfile.BadZipFile:

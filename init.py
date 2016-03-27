@@ -1,8 +1,9 @@
 
 # Script to get top250 imdb movies
 
-from lxml import html
 import requests
+from lxml import html
+
 from Classes import movie
 from Classes import opensubtitles
 
@@ -20,7 +21,8 @@ def get_page():
 
     movies = request_extra_info(movie_id_list)
 
-    return movies
+    # Just returning the 100 movies because opensubtitles dont allow 250 subtitles download.
+    return movies[:100]
 
 
 # Function to call omdbapi so we get full information on a certain movie
