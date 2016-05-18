@@ -1,0 +1,22 @@
+{
+  "name": "Movie-recommender-system",
+  "homepage": "https://github.com/CowTard/MovieRecommenderSystem",
+  "authors": [
+    "Cowtard <ei12109@fe.up.pt>"
+  ],
+  "description": "A simple movie recommendation system with python and javascript.",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "^1.5.5",
+    "angular": "^1.5.5"
+  }
+}
