@@ -1,0 +1,24 @@
+{
+  "name": "movie-recommender-system",
+  "version": "1.0.0",
+  "description": "A simple movie recommendation system with python and javascript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CowTard/MovieRecommenderSystem.git"
+  },
+  "keywords": [
+    "Movie",
+    "recommendation",
+    "system"
+  ],
+  "author": "Tiago Neto e João Soares",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CowTard/MovieRecommenderSystem/issues"
+  },
+  "homepage": "https://github.com/CowTard/MovieRecommenderSystem#readme"
+}

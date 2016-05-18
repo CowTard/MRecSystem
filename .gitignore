@@ -64,3 +64,4 @@ target/
 .DS_Store
 Subtitles/
 output/
+bower_components/
