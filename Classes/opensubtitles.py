@@ -60,7 +60,7 @@ class OpenSubtitles:
                 if file.endswith(".srt"):
                     subtitles_count += 1
 
-            if subtitles_count <= 0:
+            if subtitles_count == 0:
                 shutil.rmtree('Subtitles/' + movie_name.replace(' ', '-'))
                 print('> ERROR ' + movie_name + ': Too much subtitles or none.')
                 return False

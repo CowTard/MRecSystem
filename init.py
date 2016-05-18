@@ -4,6 +4,7 @@
 import requests
 from lxml import html
 import os
+import json
 from Classes import movie
 from Classes import opensubtitles
 
@@ -36,8 +37,8 @@ def request_extra_info(movie_id_list):
         movies_objects.append(movie.Movie(json_variables['Title'], movie_id_list[i], json_variables['Year'],
                                           json_variables['Rated'], json_variables['Runtime'],
                                           json_variables['Genre'], json_variables['Director'],
-                                          json_variables['Actors'], json_variables['Country'], json_variables['Poster'],
-                                          json_variables['Metascore'], json_variables['imdbRating']))
+                                          json_variables['Actors'], json_variables['Poster'],
+                                          json_variables['imdbRating']))
         print('> Information of ' + json_variables['Title'] + ' completed.')
     return movies_objects
 
@@ -51,26 +52,38 @@ def parse_id(movies_id):
 
     return movie_id_list
 
+def obj_dict(obj):
+    return obj.__dict__
 
 # Start script
 def init():
     print('> Starting to parse IMDB.')
     movies = get_page()
-    print('> Connecting to OpenSubtitles.')
-
-    # Downloading subtitles material
-    open_subtitles = opensubtitles.OpenSubtitles()
-    open_subtitles.login()
-
-    print('> Login successful.')
-    print('> Starting to download subtitles.')
 
     if os.listdir('Subtitles/') == []:
+
+        print('> Connecting to OpenSubtitles.')
+    
+        # Downloading subtitles material
+        open_subtitles = opensubtitles.OpenSubtitles()
+        open_subtitles.login()
+
+        print('> Login successful.')
+        print('> Starting to download subtitles.')
+
         for movieObj in movies:
             open_subtitles.search_subtitle(movieObj.id[2:], movieObj.title)
-            movieObj.get_str_files()
+            movieObj.retrieve_data()
     else:
         for movieObj in movies:
-            movieObj.get_str_files()
+            movieObj.retrieve_data()
+
+    print('> Saving data on a json file...')
+    f = open('output/data.json', 'w')
+    f.write(json.dumps(movies,default=obj_dict,indent=4,sort_keys=True))
+    f.close()
+
+    print('> Data file is now available on output/data.json')
+    print('> Exiting ...')
 
 init()
