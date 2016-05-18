@@ -1,17 +1,17 @@
-(function () {
+(function() {
 
     'use strict';
 
-    // Creation of the app, named 'ideatouch'
+    // Creation of the app, named 'movie recommender'
     var app = angular.module('movieRecommender', ['ngRoute']);
 
-    app.config(function ($routeProvider, $locationProvider) {
+    app.config(function($routeProvider, $locationProvider) {
 
         // Definition of the view routes
         $routeProvider
             .when('/', {
                 controller: 'MainController',
-                templateUrl: 'app/views/landing.ejs'
+                templateUrl: 'app/views/login.ejs'
             })
             .otherwise({
                 redirectTo: '/'
@@ -22,4 +22,4 @@
 
     });
 
-} ());
+}());
