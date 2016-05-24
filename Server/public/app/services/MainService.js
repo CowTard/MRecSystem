@@ -4,7 +4,7 @@
 
     // Created the services related to users
     var MainService = function($http, $window) {
-        console.log('hi');
+        console.log('Main service loaded.');
     };
 
     // Injecting modules used for better minifing later on

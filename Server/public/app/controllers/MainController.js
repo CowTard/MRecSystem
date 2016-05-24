@@ -5,7 +5,7 @@
     // Created the controller to the landing view
     var MainController = function ($scope, MainService) {
 
-        console.log('Landing loaded.');
+        console.log('Main Controller loaded.');
 
     };
 
