@@ -1,19 +1,53 @@
-
-    <!-- Custom styles for this template -->
+  <!-- Custom styles for this template -->
     <link href="../../css/signin.css" rel="stylesheet">
 
     <div class="container">
 
-      <form class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
+        <div class="card"></div>
+        <div class="card">
+            <h1 class="title">Login</h1>
+            <form>
+                <div class="input-container">
+                    <input type="text" id="Username" required="required" />
+                    <label for="Username">Username</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="Password" required="required" />
+                    <label for="Password">Password</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="button-container">
+                    <button><span>Go</span></button>
+                </div>
+                <div class="footer"><a href="#">Forgot your password?</a></div>
+            </form>
+        </div>
+        <div class="card alt">
+            <div class="toggle"></div>
+            <h1 class="title">Register
+                <div class="close"></div>
+            </h1>
+            <form>
+                <div class="input-container">
+                    <input type="text" id="Username" required="required" />
+                    <label for="Username">Username</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="Password" required="required" />
+                    <label for="Password">Password</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="input-container">
+                    <input type="password" id="Repeat Password" required="required" />
+                    <label for="Repeat Password">Repeat Password</label>
+                    <div class="bar"></div>
+                </div>
+                <div class="button-container">
+                    <button><span>Next</span></button>
+                </div>
+            </form>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>

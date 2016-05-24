@@ -15,7 +15,7 @@
             })
             .when('/dashboard', {
                 controller: 'MainController',
-                templateUrl: 'app/views/index.ejs'
+                templateUrl: 'app/views/dashboard.ejs'
             })
             .otherwise({
                 redirectTo: '/'
