@@ -13,6 +13,11 @@
         server.get('/dashboard', function(req, res) {
             res.render('index');
         });
+
+        // Route to send dashboard view
+        server.get('/dashboard', function (req, res) {
+            res.render('index');
+        });
     };
 
 }());

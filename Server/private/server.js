@@ -7,10 +7,10 @@
         http = require('http').Server(server),
         morgan = require('morgan'),
         path = require('path'),
-        bodyParser = require('body-parser');
-        //database = require('./database/database');
+        bodyParser = require('body-parser'),
+        database = require('./database/database');
 
-    /* Create a connection to the database
+    // Create a connection to the database
     database.connect()
         .then(function () {
             // Sending the error to the log file
@@ -21,7 +21,6 @@
             console.log('@server.js: Can\'t connect to database.');
             console.log(err);
         });
-    */
 
     // Sets the folder where are the files are static
     server.use(express.static(path.resolve(__dirname, '../public/')));

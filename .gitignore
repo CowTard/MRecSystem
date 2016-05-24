@@ -62,6 +62,7 @@ target/
 .ipynb_checkpoints
 
 .DS_Store
+secrets/
 Subtitles/
 output/
 bower_components/
