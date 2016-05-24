@@ -26,4 +26,29 @@
         client.end();
     };
 
+    // Function to insert a new user on database
+    exports.addUser = function(user) {
+        return new Promise(function(resolve, reject) {
+            client.query('INSERT INTO users(email, password,token) VALUES ($1, $2, $3) RETURNING id', user, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows[0].id);
+                }
+            });
+        });
+    };
+
+    // Function to get user' sensitive data
+    exports.getSensitiveData = function(user_email) {
+        return new Promise(function(resolve, reject) {
+            client.query('SELECT password,token from users where email = $1', user_email, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows[0]);
+                }
+            });
+        });
+    };
 }());

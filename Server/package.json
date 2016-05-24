@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/CowTard/MovieRecommenderSystem#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.1",
+    "crypto": "0.0.3",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "morgan": "^1.7.0",

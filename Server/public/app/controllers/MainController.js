@@ -1,12 +1,38 @@
-(function () {
+(function() {
 
     'use strict';
 
     // Created the controller to the landing view
-    var MainController = function ($scope, MainService) {
+    var MainController = function($scope, MainService) {
 
         console.log('Main Controller loaded.');
 
+        // Varible used in order to show server messages to user.
+        $scope.user_Message = '';
+
+        // Scope function to handle login
+        $scope.login = function(user) {
+
+            MainService.login(user)
+                .then(function(result) {
+                    $scope.user_Message = result.data;
+                })
+                .catch(function(err) {
+                    $scope.user_Message = err.data;
+                });
+        };
+
+        // Scope function to handle register
+        $scope.register = function(user) {
+
+            MainService.register(user)
+                .then(function(result) {
+                    $scope.user_Message = result.data;
+                })
+                .catch(function(err) {
+                    $scope.user_Message = err.data;
+                });
+        };
     };
 
     // Injecting modules used for better minifing later on
@@ -15,4 +41,4 @@
     // Enabling the controller in the app
     angular.module('movieRecommender').controller('MainController', MainController);
 
-} ());
+}());

@@ -3,22 +3,22 @@
 
     <div class="container">
 
-        <div class="card"></div>
+        <div class="alert alert-danger text-center" role="alert">{{ user_Message }}</div>
         <div class="card">
             <h1 class="title">Login</h1>
             <form>
                 <div class="input-container">
-                    <input type="text" id="Username" required="required" />
+                    <input ng-model="user_log.username" type="text" id="Username" required="required" />
                     <label for="Username">Username</label>
                     <div class="bar"></div>
                 </div>
                 <div class="input-container">
-                    <input type="password" id="Password" required="required" />
+                    <input ng-model="user_log.password" type="password" id="Password" required="required" />
                     <label for="Password">Password</label>
                     <div class="bar"></div>
                 </div>
                 <div class="button-container">
-                    <button><span>Go</span></button>
+                    <button ng-click="login(user_log)"><span>Go</span></button>
                 </div>
                 <div class="footer"><a href="#">Forgot your password?</a></div>
             </form>
@@ -30,32 +30,26 @@
             </h1>
             <form>
                 <div class="input-container">
-                    <input type="text" id="Username" required="required" />
+                    <input ng-model="user_reg.username" type="text" id="Username" required="required" />
                     <label for="Username">Username</label>
                     <div class="bar"></div>
                 </div>
                 <div class="input-container">
-                    <input type="password" id="Password" required="required" />
+                    <input ng-model="user_reg.password" type="password" id="Password" required="required" />
                     <label for="Password">Password</label>
                     <div class="bar"></div>
                 </div>
                 <div class="input-container">
-                    <input type="password" id="Repeat Password" required="required" />
+                    <input ng-model="user_reg.cpassword" type="password" id="Repeat Password" required="required" />
                     <label for="Repeat Password">Repeat Password</label>
                     <div class="bar"></div>
                 </div>
                 <div class="button-container">
-                    <button><span>Next</span></button>
+                    <button ng-click="register(user_reg)"><span>Next</span></button>
                 </div>
             </form>
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       </form>
 
-    </div> <!-- /container -->
-
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-  </body>
-</html>
+    </div>

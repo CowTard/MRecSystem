@@ -3,7 +3,7 @@
     'use strict';
 
     // Creation of the app, named 'movie recommender'
-    var app = angular.module('movieRecommender', ['ngRoute']);
+    var app = angular.module('movieRecommender', ['ngRoute','ngCookies']);
 
     app.config(function($routeProvider, $locationProvider) {
 
