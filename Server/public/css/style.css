@@ -289,7 +289,7 @@ body {
 .card .input-container .bar:after {
     content: '';
     position: absolute;
-    background: #ed2553;
+    background: #666666;
     width: 0;
     height: 2px;
     -webkit-transition: .2s ease;

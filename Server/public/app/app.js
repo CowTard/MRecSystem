@@ -13,6 +13,10 @@
                 controller: 'MainController',
                 templateUrl: 'app/views/login.ejs'
             })
+            .when('/dashboard', {
+                controller: 'MainController',
+                templateUrl: 'app/views/dashboard.ejs'
+            })
             .otherwise({
                 redirectTo: '/'
             });
