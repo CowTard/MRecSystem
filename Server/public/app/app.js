@@ -3,7 +3,7 @@
     'use strict';
 
     // Creation of the app, named 'movie recommender'
-    var app = angular.module('movieRecommender', ['ngRoute','ngCookies']);
+    var app = angular.module('movieRecommender', ['ngRoute', 'ngCookies']);
 
     app.config(function($routeProvider, $locationProvider) {
 
@@ -16,6 +16,10 @@
             .when('/dashboard', {
                 controller: 'MainController',
                 templateUrl: 'app/views/dashboard.ejs'
+            })
+            .when('/parser', {
+                controller: 'MainController',
+                templateUrl: 'app/views/parser.ejs'
             })
             .otherwise({
                 redirectTo: '/'

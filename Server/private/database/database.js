@@ -51,4 +51,18 @@
             });
         });
     };
+
+    // Function to insert movies in database
+    exports.insertMovies = function(movies) {
+        return new Promise(function(resolve, reject) {
+            client.query('INSERT INTO movies (title, actors,directors,genre, idletime, rated, runtime, talktime, timeToRead, year, imdbrating, poster) VALUES ' + movies, [], function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    };
 }());

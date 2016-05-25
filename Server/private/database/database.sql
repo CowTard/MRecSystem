@@ -33,6 +33,7 @@ CREATE TABLE ratingfunction (
 -- Movie table
 CREATE TABLE movies(
 	id BIGSERIAL PRIMARY KEY,
+	title VARCHAR(255) NOT NULL,
 	actors VARCHAR(255) NOT NULL,
 	directors VARCHAR(255) NOT NULL,
 	genre VARCHAR(255) NOT NULL,
@@ -42,7 +43,7 @@ CREATE TABLE movies(
 	talktime SMALLINT NOT NULL,
 	timeToRead SMALLINT NOT NULL,
 	year VARCHAR(10) NOT NULL,
-	imdbrating SMALLINT NOT NULL,
+	imdbrating DECIMAL NOT NULL,
 	poster VARCHAR(255) NOT NULL
 );
 
@@ -69,3 +70,4 @@ $create_rating_row$ LANGUAGE plpgsql;
 CREATE TRIGGER create_rating_row AFTER INSERT ON users
 	FOR ROW 
 	EXECUTE PROCEDURE insert_rating();
+

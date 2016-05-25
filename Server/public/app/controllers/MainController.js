@@ -33,6 +33,18 @@
                     $scope.user_Message = err.data;
                 });
         };
+
+        // Scope function to hangle upload
+        $scope.upload = function(data) {
+
+            MainService.upload(data)
+                .then(function(result) {
+                    $scope.user_Message = result.data;
+                })
+                .catch(function(err) {
+                    $scope.user_Message = err.data;
+                });
+        };
     };
 
     // Injecting modules used for better minifing later on

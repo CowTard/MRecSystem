@@ -1,4 +1,4 @@
-(function () {
+(function() {
 
     'use strict';
 
@@ -12,11 +12,11 @@
 
     // Create a connection to the database
     database.connect()
-        .then(function () {
+        .then(function() {
             // Sending the error to the log file
             console.log('@server.js: Connected to database.');
         })
-        .catch(function (err) {
+        .catch(function(err) {
             // Sending the error to the log file
             console.log('@server.js: Can\'t connect to database.');
             console.log(err);
@@ -45,8 +45,8 @@
     require('./routes/router')(server, http);
 
     // Starts the server using port 8080
-    http.listen(8080, function () {
+    http.listen(8080, function() {
         console.log('Server listening to port 8080');
     });
 
-} ());
+}());

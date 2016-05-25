@@ -38,6 +38,17 @@
                     deferred.reject(err);
                 });
         };
+
+        // Function to handle upload
+        this.upload = function(data) {
+            return $http.post('/parser', data)
+                .success(function(res) {
+                    deferred.resolve(res);
+                })
+                .error(function(err) {
+                    deferred.reject(err);
+                });
+        };
     };
 
     // Injecting modules used for better minifing later on
