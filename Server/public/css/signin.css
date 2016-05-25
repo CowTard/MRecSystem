@@ -4,6 +4,12 @@
     letter-spacing: 2px;
 }
 
+.alert-danger {
+    color: white;
+    background-color: #666666;
+    border-color: #666666;
+}
+
 .title h1 {
     margin: 0 0 20px;
     font-size: 30px;
@@ -19,10 +25,10 @@
     letter-spacing: 1px;
 }
 
-.btn-primary {
+.btn-grey {
     color: #fff;
     background-color: #666666;
-    border-color: #2e6da4;
+    border-color: #666666;
 }
 
 .form-signin {
