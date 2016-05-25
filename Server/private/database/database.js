@@ -73,9 +73,23 @@
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(result.rows[0]);
+                    resolve(result);
                 }
             });
         });
     };
+
+    // Function to get all the data from a movie by id
+    exports.getAllMovies = function() {
+        return new Promise(function(resolve, reject) {
+            client.query('SELECT * from movies', id, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
+    };
+
 }());

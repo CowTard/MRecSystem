@@ -59,6 +59,18 @@
                     res.status(406).send('Oops. Something went wrong!');
                 });
         });
+
+        // Route related with login.
+        server.post('/api/movies', function(req, res) {
+
+            database.getAllMovies()
+                .then(function(_data) {
+                    res.status(200).send(req.body)
+                })
+                .catch(function() {
+                    res.status(406).send('Oops. Something went wrong!');
+                });
+        });
     };
 
 }());
