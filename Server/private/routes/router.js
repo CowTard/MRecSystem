@@ -28,7 +28,6 @@
 
             _asyncFor(JSON.parse(req.body.txtarea))
                 .then(function(_) {
-                    console.log(_);
                     database.insertMovies(_)
                         .then(function(_r) {
                             res.status(200).send('OK');
