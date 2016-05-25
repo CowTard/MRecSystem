@@ -60,7 +60,7 @@ def init():
     print('> Starting to parse IMDB.')
     movies = get_page()
 
-    if os.listdir('Subtitles/') == []:
+    if os.listdir('Subtitles/') == ['.gitignore']:
 
         print('> Connecting to OpenSubtitles.')
     
