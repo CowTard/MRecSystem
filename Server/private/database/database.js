@@ -57,7 +57,6 @@
         return new Promise(function(resolve, reject) {
             client.query('INSERT INTO movies (title, actors,directors,genre, idletime, rated, runtime, talktime, timeToRead, year, imdbrating, poster) VALUES ' + movies, [], function(err, result) {
                 if (err) {
-                    console.log(err);
                     reject(err);
                 } else {
                     resolve(result);
@@ -82,11 +81,11 @@
     // Function to get all the data from a movie by id
     exports.getAllMovies = function() {
         return new Promise(function(resolve, reject) {
-            client.query('SELECT * from movies', id, function(err, result) {
+            client.query('SELECT * from movies', function(err, result) {
                 if (err) {
                     reject(err);
                 } else {
-                    resolve(result);
+                    resolve(result.rows);
                 }
             });
         });

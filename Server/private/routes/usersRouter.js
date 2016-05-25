@@ -61,11 +61,11 @@
         });
 
         // Route related with login.
-        server.post('/api/movies', function(req, res) {
+        server.get('/api/movies', function(req, res) {
 
             database.getAllMovies()
                 .then(function(_data) {
-                    res.status(200).send(req.body)
+                    res.status(200).send(_data);
                 })
                 .catch(function() {
                     res.status(406).send('Oops. Something went wrong!');

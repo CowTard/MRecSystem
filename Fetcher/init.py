@@ -42,7 +42,6 @@ def request_extra_info(movie_id_list):
         print('> Information of ' + json_variables['Title'] + ' completed.')
     return movies_objects
 
-
 # Function to parse all ID
 def parse_id(movies_id):
     movie_id_list = []

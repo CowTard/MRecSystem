@@ -49,6 +49,17 @@
                     deferred.reject(err);
                 });
         };
+
+        // Function to retrieve all movies information
+        this.getMovies = function() {
+            return $http.get('/api/movies')
+                .success(function(res) {
+                    deferred.resolve(res);
+                })
+                .error(function(err) {
+                    deferred.reject(err);
+                });
+        };
     };
 
     // Injecting modules used for better minifing later on
