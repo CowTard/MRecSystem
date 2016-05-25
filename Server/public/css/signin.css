@@ -1,7 +1,34 @@
-body {
-    padding-top: 40px;
-    padding-bottom: 40px;
-    background-color: #eee;
+.title {
+    padding: 30px 30px 20px 30px;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.alert-danger {
+    color: white;
+    background-color: #666666;
+    border-color: #666666;
+}
+
+.title h1 {
+    margin: 0 0 20px;
+    font-size: 30px;
+    font-weight: 300;
+    color: #666666;
+}
+
+.login-title {
+    font-size: 16px;
+    font-weight: 300;
+    color: #666666;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+.btn-grey {
+    color: #fff;
+    background-color: #666666;
+    border-color: #666666;
 }
 
 .form-signin {
@@ -21,22 +48,22 @@ body {
 
 .form-signin .form-control {
     position: relative;
+    font-size: 16px;
     height: auto;
+    padding: 10px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 10px;
-    font-size: 16px;
 }
 
 .form-signin .form-control:focus {
     z-index: 2;
 }
 
-.form-signin input[type="email"] {
+.form-signin input[type="text"] {
     margin-bottom: -1px;
-    border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .form-signin input[type="password"] {
@@ -45,6 +72,28 @@ body {
     border-top-right-radius: 0;
 }
 
-.alert:empty {
-    display: none;
+.login-title {
+    color: #666666;
+    font-size: 18px;
+    font-weight: 400;
+    display: block;
+}
+
+.profile-img {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.need-help {
+    margin-top: 10px;
+}
+
+.new-account {
+    display: block;
+    margin-top: 10px;
 }

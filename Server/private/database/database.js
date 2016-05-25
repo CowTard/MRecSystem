@@ -65,4 +65,17 @@
             });
         });
     };
+
+    // Function to get all the data from a movie by id
+    exports.getMovieByID = function(id) {
+        return new Promise(function(resolve, reject) {
+            client.query('SELECT * from movies where id = $1', id, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows[0]);
+                }
+            });
+        });
+    };
 }());
