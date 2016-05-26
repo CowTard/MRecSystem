@@ -10,6 +10,11 @@
         // Varible used in order to show server messages to user.
         $scope.user_Message = '';
 
+        $scope.user = {
+            email: '',
+            password: ''
+        };
+
         // Variable holding all movie information
         $scope._moviesOnDatabase = [];
 
@@ -55,12 +60,15 @@
             MainService.getMovies()
                 .then(function(result) {
                     $scope._moviesOnDatabase = result.data;
-                    console.log($scope._moviesOnDatabase);
                 })
                 .catch(function(err) {
                     $scope.user_Message = err.data;
                 });
         };
+
+        $scope.logout = function() {
+            MainService.logout();
+        }
     };
 
     // Injecting modules used for better minifing later on

@@ -23,9 +23,9 @@
                 <button type="submit" class="btn btn-default">Submit</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <button type="button" class="btn btn-default navbar-btn">Logout</button>
+                <button type="button" class="btn btn-default navbar-btn" ng-click="logout()">Logout</button>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Username <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{user.email}}<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Action</a></li>
                         <li><a href="#">Another action</a></li>
@@ -44,25 +44,25 @@
     <div ng-repeat="movie in _moviesOnDatabase" ng-if="$index % 4 == 0" class="row">
         <div class="col-lg-3 col-md-4 col-xs-6 thumb">
             <a class="thumbnail" href="#">
-                <img class="img-responsive" ng-src="{{movie.poster}}">
+                <img class="img-responsive" width="250" height="400" ng-src="{{movie.poster}}">
             </a>
             <h6 class="text-center">{{movie.title}}</h6>
         </div>
         <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 1)">
             <a class="thumbnail" href="#">
-                <img class="img-responsive" ng-src="{{_moviesOnDatabase[$index+1].poster}}" >
+                <img class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+1].poster}}" >
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+1].title}}</h6>
         </div>
         <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 2)">
             <a class="thumbnail" href="#">
-            <img class="img-responsive" ng-src="{{_moviesOnDatabase[$index+2].poster}}">
+            <img class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+2].poster}}">
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+2].title}}</h6>
         </div>
         <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 3)">
             <a class="thumbnail" href="#">
-            <img class="img-responsive" ng-src="{{_moviesOnDatabase[$index+3].poster}}">
+            <img class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+3].poster}}">
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+3].title}}</h6>
         </div>
