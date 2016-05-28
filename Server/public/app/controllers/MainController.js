@@ -10,10 +10,7 @@
         // Varible used in order to show server messages to user.
         $scope.user_Message = '';
 
-        $scope.user = {
-            email: '',
-            password: ''
-        };
+        $scope.username = '';
 
         // Variable holding all movie information
         $scope._moviesOnDatabase = [];
@@ -64,6 +61,14 @@
                 .catch(function(err) {
                     $scope.user_Message = err.data;
                 });
+        };
+
+        // Scope function to retrieve logged user
+        $scope.getLoggedUser = function() {
+
+            var cookie = MainService.getLoggedUser();
+            var username = cookie.split('-');
+            $scope.username = username[0];
         };
 
         $scope.logout = function() {
