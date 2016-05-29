@@ -55,7 +55,6 @@
             MainService.getMovies()
                 .then(function(result) {
                     $scope._moviesOnDatabase = result.data;
-                    console.log($scope._moviesOnDatabase);
                 })
                 .catch(function(err) {
                     $scope.user_Message = err.data;
