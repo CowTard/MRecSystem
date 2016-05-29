@@ -60,6 +60,25 @@
                     deferred.reject(err);
                 });
         };
+
+        // Function to retrieve the user
+        this.getLoggedUser = function() {
+            var username = $cookies.get('session', {
+                path: '/'
+            });
+
+            return username;
+        };
+
+        this.logout = function() {
+            $cookies.remove('session', {
+                path: '/'
+            });
+
+            $window.location = '/';
+
+
+        };
     };
 
     // Injecting modules used for better minifing later on
