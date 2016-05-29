@@ -63,12 +63,22 @@
         // Route responsible to get all the movies.
         server.get('/api/movies', function(req, res) {
 
-            database.getAllMovies()
-                .then(function(_data) {
-                    res.status(200).send(_data);
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(_info) {
+
+                    database.getAllMovies([_info.id])
+                        .then(function(_data) {
+                            res.status(200).send(_data);
+                        })
+                        .catch(function() {
+                            res.status(406).send('Oops. Something went wrong!');
+                        });
                 })
-                .catch(function() {
-                    res.status(406).send('Oops. Something went wrong!');
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not reference this like to your account.');
                 });
         });
 

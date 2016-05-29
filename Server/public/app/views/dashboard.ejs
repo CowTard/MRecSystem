@@ -46,28 +46,28 @@
     <div ng-repeat="movie in _moviesOnDatabase" ng-if="$index % 4 == 0" class="row">
         <div class="col-lg-3 col-md-4 col-xs-6 thumb">
             <a class="thumbnail" href="#">
-                <img ng-click="likedMovie(movie.id)" class="img-responsive" width="250" height="400" ng-src="{{movie.poster}}">
+                <img ng-click="likedMovie(movie.id, movie.liked)" class="img-responsive" width="250" height="400" ng-src="{{movie.poster}}">
             </a>
             <h6 class="text-center">{{movie.title}}</h6>
         </div>
         <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 1)">
             <p style="display: none">{{_moviesOnDatabase[$index+1].id}}</p>
-            <a class="thumbnail" href="#">
-                <img ng-click="likedMovie(_moviesOnDatabase[$index+1].id)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+1].poster}}" >
+            <a ng-disabled="_moviesOnDatabase[$index+1]" class="thumbnail" href="#">
+                <img ng-click="likedMovie(_moviesOnDatabase[$index+1].id, _moviesOnDatabase[$index+1].liked)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+1].poster}}" >
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+1].title}}</h6>
         </div>
         <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 2)">
             <p style="display: none">{{_moviesOnDatabase[$index+2].id}}</p>
-            <a class="thumbnail" href="#">
-                <img ng-click="likedMovie(_moviesOnDatabase[$index+2].id)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+2].poster}}">
+            <a ng-disabled="_moviesOnDatabase[$index+2].liked" class="thumbnail" href="#">
+                <img ng-click="likedMovie(_moviesOnDatabase[$index+2].id, _moviesOnDatabase[$index+2].liked)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+2].poster}}">
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+2].title}}</h6>
         </div>
         <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 3)">
             <p style="display: none">{{_moviesOnDatabase[$index+3].id}}</p>
-            <a class="thumbnail" href="#">
-                <img ng-click="likedMovie(_moviesOnDatabase[$index+3].id)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+3].poster}}">
+            <a ng-disabled="_moviesOnDatabase[$index+3].liked" class="thumbnail" href="#">
+                <img ng-click="likedMovie(_moviesOnDatabase[$index+3].id, _moviesOnDatabase[$index+3].liked)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+3].poster}}">
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+3].title}}</h6>
         </div>

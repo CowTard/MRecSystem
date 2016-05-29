@@ -81,16 +81,17 @@
         };
 
         // Scope function to like movie
-        $scope.likedMovie = function(_movieID) {
+        $scope.likedMovie = function(_movieID, isMovieLiked) {
 
-            MainService.likedMovie(_movieID)
-                .then(function(_result) {
-                    // Make movie unclickable
+            if (!isMovieLiked) {
+                MainService.likedMovie(_movieID)
+                    .then(function(_result) {
 
-                })
-                .catch(function(err) {
-                    $scope.user_Message = err.data;
-                });
+                    })
+                    .catch(function(err) {
+                        $scope.user_Message = err.data;
+                    });
+            }
         };
     };
 

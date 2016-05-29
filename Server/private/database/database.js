@@ -79,9 +79,12 @@
     };
 
     // Function to get all the data from a movie by id
-    exports.getAllMovies = function() {
+    exports.getAllMovies = function(userID) {
         return new Promise(function(resolve, reject) {
-            client.query('SELECT * from movies', function(err, result) {
+            client.query('select movies.*, movies_users.userid is not null as liked \
+                            from movies LEFT JOIN movies_users \
+                            ON movies_users.movieid = movies.id and movies_users.userid = $1\
+                            ORDER BY movies.id', userID, function(err, result) {
                 if (err) {
                     reject(err);
                 } else {
