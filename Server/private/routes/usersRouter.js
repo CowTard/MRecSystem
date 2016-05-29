@@ -97,6 +97,18 @@
                     // Add it to database
                     database.insertLike([_info.id, movieID])
                         .then(function(result) {
+
+
+
+
+
+
+
+
+
+
+
+
                             res.status(200).send('OK');
                         })
                         .catch(function(err) {
@@ -106,6 +118,28 @@
                 .catch(function(err) {
                     res.status(406).send('Email is not valid. We could not reference this like to your account.');
                 });
+        });
+
+        // Route that returns all liked movies from the requester
+        server.get('/api/movies/liked', function(req, res) {
+
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(_info) {
+                    database.getLikedMovies([_info.id])
+                        .then(function(result) {
+                            res.status(200).send(result);
+                        })
+                        .catch(function(err) {
+                            res.status(406).send(err);
+                        });
+                })
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not resolve this request.');
+                });
+
         });
     };
 

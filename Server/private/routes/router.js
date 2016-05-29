@@ -18,6 +18,11 @@
             res.render('index');
         });
 
+        // Route to send recommender view
+        server.get('/recommender', function(req, res) {
+            res.render('index');
+        });
+
         // Route to show parser input
         server.get('/parser', function(req, res) {
             res.render('index');

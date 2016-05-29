@@ -17,6 +17,10 @@
                 controller: 'MainController',
                 templateUrl: 'app/views/dashboard.ejs'
             })
+            .when('/recommender', {
+                controller: 'MovieController',
+                templateUrl: 'app/views/recommender.ejs'
+            })
             .when('/parser', {
                 controller: 'MainController',
                 templateUrl: 'app/views/parser.ejs'

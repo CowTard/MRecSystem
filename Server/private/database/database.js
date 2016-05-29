@@ -94,6 +94,19 @@
         });
     };
 
+    // Function to get only liked movies
+    exports.getLikedMovies = function(userID) {
+        return new Promise(function(resolve, reject) {
+            client.query('select movies.* from movies, movies_users where movies_users.userID = $1 and movies_users.movieid = movies.id;', userID, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
     // Function to insert a 'like' on certain movie
     exports.insertLike = function(data) {
         return new Promise(function(resolve, reject) {
@@ -107,5 +120,6 @@
             });
         });
     };
+
 
 }());
