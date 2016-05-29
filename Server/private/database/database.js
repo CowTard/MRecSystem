@@ -42,7 +42,7 @@
     // Function to get user' sensitive data
     exports.getSensitiveData = function(user_email) {
         return new Promise(function(resolve, reject) {
-            client.query('SELECT password,token from users where email = $1', user_email, function(err, result) {
+            client.query('SELECT id, password,token from users where email = $1', user_email, function(err, result) {
                 if (err) {
                     reject(err);
                 } else {
@@ -83,6 +83,20 @@
         return new Promise(function(resolve, reject) {
             client.query('SELECT * from movies', function(err, result) {
                 if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
+    // Function to insert a 'like' on certain movie
+    exports.insertLike = function(data) {
+        return new Promise(function(resolve, reject) {
+            client.query('INSERT INTO movies_users (userid, movieID) VALUES($1,$2)', data, function(err, result) {
+                if (err) {
+                    console.log(err);
                     reject(err);
                 } else {
                     resolve(result.rows);

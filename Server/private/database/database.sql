@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS ratingfunction CASCADE;
 DROP TABLE IF EXISTS movies CASCADE;
 DROP TABLE IF EXISTS predictions CASCADE;
+DROP TABLE IF EXISTS movies_users CASCADE;
 DROP FUNCTION IF EXISTS insert_rating() CASCADE;
 DROP TRIGGER IF EXISTS create_rating_row on users CASCADE;
 
@@ -45,6 +46,13 @@ CREATE TABLE movies(
 	year VARCHAR(10) NOT NULL,
 	imdbrating DECIMAL NOT NULL,
 	poster VARCHAR(255) NOT NULL
+);
+
+-- Movie liked by users
+CREATE TABLE movies_users(
+	movieID BIGINT REFERENCES movies(id),
+	userID BIGINT REFERENCES users(id),
+	PRIMARY KEY (movieID, userID)
 );
 
 -- predictions

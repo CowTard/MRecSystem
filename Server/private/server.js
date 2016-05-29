@@ -8,6 +8,7 @@
         morgan = require('morgan'),
         path = require('path'),
         bodyParser = require('body-parser'),
+        cookieParser = require('cookie-parser'),
         database = require('./database/database');
 
     // Create a connection to the database
@@ -36,6 +37,7 @@
         extended: false
     }));
 
+    server.use(cookieParser());
     server.use(bodyParser.json());
 
     // Outputs simple log information to the console.

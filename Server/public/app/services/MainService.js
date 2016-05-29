@@ -70,14 +70,25 @@
             return username;
         };
 
+        // Scope function to erase the existing session cookie
         this.logout = function() {
             $cookies.remove('session', {
                 path: '/'
             });
 
             $window.location = '/';
+        };
 
+        // Scope function to like movie
+        this.likedMovie = function(_movieID) {
 
+            return $http.post('/api/movie', { id: _movieID })
+                .success(function(result) {
+                    deferred.resolve(result);
+                })
+                .error(function(err) {
+                    deferred.reject(err);
+                });
         };
     };
 

@@ -33,13 +33,17 @@
             MainService.register(user)
                 .then(function(result) {
                     $scope.user_Message = result.data;
+
+                    // Reset user scope variables
+                    $scope.user_reg = {};
+
                 })
                 .catch(function(err) {
                     $scope.user_Message = err.data;
                 });
         };
 
-        // Scope function to hangle upload
+        // Scope function to hangle upload JSON file
         $scope.upload = function(data) {
 
             MainService.upload(data)
@@ -71,9 +75,23 @@
             $scope.username = username[0];
         };
 
+        // Scope function to erase the existing session cookie
         $scope.logout = function() {
             MainService.logout();
-        }
+        };
+
+        // Scope function to like movie
+        $scope.likedMovie = function(_movieID) {
+
+            MainService.likedMovie(_movieID)
+                .then(function(_result) {
+                    // Make movie unclickable
+
+                })
+                .catch(function(err) {
+                    $scope.user_Message = err.data;
+                });
+        };
     };
 
     // Injecting modules used for better minifing later on

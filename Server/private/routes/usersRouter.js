@@ -60,7 +60,7 @@
                 });
         });
 
-        // Route related with login.
+        // Route responsible to get all the movies.
         server.get('/api/movies', function(req, res) {
 
             database.getAllMovies()
@@ -69,6 +69,32 @@
                 })
                 .catch(function() {
                     res.status(406).send('Oops. Something went wrong!');
+                });
+        });
+
+        // Route responsible to handle the movie likes
+        server.post('/api/movie', function(req, res) {
+
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(_info) {
+
+                    // Get post parameter
+                    var movieID = req.body.id;
+
+                    // Add it to database
+                    database.insertLike([_info.id, movieID])
+                        .then(function(result) {
+                            res.status(200).send('OK');
+                        })
+                        .catch(function(err) {
+                            res.status(406).send(err);
+                        });
+                })
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not reference this like to your account.');
                 });
         });
     };
