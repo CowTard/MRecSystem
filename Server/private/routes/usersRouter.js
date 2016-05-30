@@ -151,7 +151,7 @@
 
             database.getReviewedMovies([1])
                 .then(function(result) {
-                    analizeLikedMovies(result)
+                    analizeLikedMovies(result, 1)
                         .then(function() {
                             res.status(200).send(result);
                         })
@@ -166,13 +166,13 @@
     };
 
     // Function to analyze liked movies and return a new function
-    function analizeLikedMovies(moviesArray) {
+    function analizeLikedMovies(moviesArray, id) {
         return new Promise(function(resolve, reject) {
 
             //
             // ANALIZE FUNCTION
             //  
-            // Params = [ Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, timetoread, year]
+            // Params = [ Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, country, year]
             //
             // --> Actors
             //      Liked Actors vs Disliked Actors | If there's repetition, improve. Contradition = ?
@@ -294,20 +294,31 @@
                 runtime[_movie.liked & 1].push(_movie.runtime);
             });
 
-            console.log('actors: ', actors);
-            console.log('directors: ', directors);
-            console.log('genres: ', genres);
-            console.log('rated: ', rated);
-            console.log('country: ', countries);
-            console.log('decades: ', decades);
-            console.log('IMDB: ', imdbrating);
-            console.log('country: ', countries);
-            console.log('IdleTime: ', idleTime);
-            console.log('Talk time: ', talktime);
-            console.log('Runtime: ', runtime);
-            resolve();
+            database.getRatingFunction([id])
+                .then(function(functionParameters) {
+                    console.log(functionParameters);
+                    console.log('actors: ', actors);
+                    console.log('directors: ', directors);
+                    console.log('genres: ', genres);
+                    console.log('rated: ', rated);
+                    console.log('country: ', countries);
+                    console.log('decades: ', decades);
+                    console.log('IMDB: ', imdbrating);
+                    console.log('country: ', countries);
+                    console.log('IdleTime: ', idleTime);
+                    console.log('Talk time: ', talktime);
+                    console.log('Runtime: ', runtime);
+                    resolve();
+                })
+                .catch(function(err) {
+                    reject('We couldn\'t resolve your request');
+                });
         });
     }
 
+    // Function that calculates 
+    function similiarity(a_data) {
+
+    };
 
 }());

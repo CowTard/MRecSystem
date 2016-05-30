@@ -134,5 +134,18 @@
         });
     };
 
+    // Function to retrieve rating function
+    exports.getRatingFunction = function(userID) {
+        return new Promise(function(resolve, reject) {
+            client.query('Select * from ratingfunction where userid = $1', userID, function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
 
 }());
