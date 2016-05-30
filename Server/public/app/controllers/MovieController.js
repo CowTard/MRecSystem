@@ -7,9 +7,9 @@
         console.log('Movie Controller loaded.');
 
         // Function to get only liked movies
-        $scope.getLikedMovies = function() {
+        $scope.getReviewedMovies = function() {
 
-            MovieService.getLikedMovies()
+            MovieService.getReviewedMovies()
                 .then(function(result) {
                     $scope.movies = result.data;
                 })

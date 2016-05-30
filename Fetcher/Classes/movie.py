@@ -6,7 +6,7 @@ import re
 
 class Movie:
 
-    def __init__(self, title, id, year, rated, runtime, genre, director, actors, poster, imdbrating):
+    def __init__(self, title, id, year, rated, runtime, genre, director, actors, poster, imdbrating, country):
         self.title = title
         self.id = id
         self.year = year
@@ -19,7 +19,7 @@ class Movie:
         self.imdbRating = imdbrating
         self.talkTime = 0
         self.idleTime = 0
-        self.timeToRead = 0
+        self.country = country
 
     # Get subtitles for this movie object.
     def get_str_files(self):
@@ -37,12 +37,10 @@ class Movie:
     def retrieve_data(self):
 
         subtitles_file = self.get_str_files()
-        number_of_words = 0;
 
         for sub_file in subtitles_file:
             sub = pysrt.open('Subtitles/' + self.title.replace(' ', '-') + '/' + sub_file, encoding='iso-8859-1')
             for line in sub:
-                number_of_words += len(line.text.split())
                 time_difference_in_minutes = datetime.datetime.combine(datetime.date.today(), line.end.to_time()) - \
                                              datetime.datetime.combine(datetime.date.today(), line.start.to_time())
                 self.talkTime += time_difference_in_minutes.total_seconds()
@@ -50,7 +48,6 @@ class Movie:
         self.convert_runtime()
         self.talkTime = round(self.talkTime / 60);
         self.idleTime = round(float(self.runtime) - (self.talkTime))
-        self.timeToRead += round( (number_of_words / 4.1) / 60)
 
     # Convert runtime from 'X min' => 'X'
     def convert_runtime(self):

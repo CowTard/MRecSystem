@@ -3,6 +3,7 @@
     'use strict';
 
     var database = require('../database/database'),
+        Promise = require('bluebird'),
         bcrypt = require('bcrypt-nodejs'),
         crypto = require('crypto');
 
@@ -92,24 +93,27 @@
                 .then(function(_info) {
 
                     // Get post parameter
-                    var movieID = req.body.id;
+                    var movieID = req.body.id,
+                        review = req.body.review;
 
                     // Add it to database
-                    database.insertLike([_info.id, movieID])
+                    database.insertReview([_info.id, movieID, review])
                         .then(function(result) {
 
+                            database.getReviewedMovies([_info.id])
+                                .then(function(_result) {
 
-
-
-
-
-
-
-
-
-
-
-                            res.status(200).send('OK');
+                                    analizeLikedMovies(_result)
+                                        .then(function(_) {
+                                            res.status(200).send('OK');
+                                        })
+                                        .catch(function(_err) {
+                                            res.status(406).send('We could not resolve your request.');
+                                        });
+                                })
+                                .catch(function(err) {
+                                    res.status(406).send('We could not resolve your request.');
+                                });
                         })
                         .catch(function(err) {
                             res.status(406).send(err);
@@ -137,10 +141,79 @@
                         });
                 })
                 .catch(function(err) {
-                    res.status(406).send('Email is not valid. We could not resolve this request.');
+                    res.status(406).send('Email is not valid. We could not resolve your request.');
                 });
 
         });
+
+        server.get('/test', function(req, res) {
+
+            database.getReviewedMovies([1])
+                .then(function(result) {
+                    res.status(200).send(result);
+                })
+                .catch(function(res) {
+                    res.status(406).send('ok');
+                });
+        });
     };
+
+    // Function to analyze liked movies and return a new function
+    function analizeLikedMovies(moviesArray) {
+        return new Promise(function(resolve, reject) {
+
+
+            //
+            // ANALIZE FUNCTION
+            //  
+            // Params = [ Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, timetoread, year]
+            //
+            // --> Actors
+            //      Liked Actors vs Disliked Actors | If there's repetition, improve. Contradition = ?
+            // --> Directors
+            //      Liked Directors vs Disliked Directors | If there's repetition improve. Contradition = ?
+            // --> Genre
+            //      Liked Genres vs Disliked Genres | If there's repetition improve. Contradition = ?
+            //  --> IdleTime, runtime, talktime, timetoread
+            //      See function
+            //  --> ImdbRating
+            //      Calculate disparity
+            //  --> Rated
+            //      Liked rates vs dislike rates | If there's repetition, improve. Contradition = ?
+            //  --> Year
+            //      Like decades vs dislike decades | If there's repetition, improve. Contradition = ?
+            //
+            // 
+
+            console.log(moviesArray);
+
+            // Get liked and disliked actors
+            var dislikedActors = [];
+            var likedActors = [];
+
+            // Get liked and disliked directors
+            var dislikedDirectors = [];
+            var likedDirectors = [];
+
+            // Get liked and dislike genres
+            var dislikedGenres = [];
+            var likedGenres = [];
+
+            // Get Liked and disliked rated
+            var dislikedRated = [];
+            var likedRated = [];
+
+            // Get liked and disliked decades
+            var dislikedDecades = [];
+            var likedDecades = [];
+
+            for (var i = 0; i < len(moviesArray); i++) {
+
+            }
+
+            resolve();
+        });
+    }
+
 
 }());

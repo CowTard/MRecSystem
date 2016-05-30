@@ -22,8 +22,8 @@ def get_page():
 
     movies = request_extra_info(movie_id_list)
 
-    # Just returning the 100 movies because opensubtitles dont allow 250 subtitles download.
-    return movies[:100]
+    # Just returning the 125 movies because opensubtitles dont allow 250 subtitles download.
+    return movies[:125]
 
 
 # Function to call omdbapi so we get full information on a certain movie
@@ -38,7 +38,7 @@ def request_extra_info(movie_id_list):
                                           json_variables['Rated'], json_variables['Runtime'],
                                           json_variables['Genre'], json_variables['Director'],
                                           json_variables['Actors'], json_variables['Poster'],
-                                          json_variables['imdbRating']))
+                                          json_variables['imdbRating'], json_variables['Country']))
         print('> Information of ' + json_variables['Title'] + ' completed.')
     return movies_objects
 
@@ -58,8 +58,9 @@ def obj_dict(obj):
 def init():
     print('> Starting to parse IMDB.')
     movies = get_page()
-
-    if os.listdir('Subtitles/') == ['.gitignore']:
+    
+    # Not proud of this hack
+    if os.listdir('Subtitles/') == ['.DS_Store', '.gitignore']:
 
         print('> Connecting to OpenSubtitles.')
     

@@ -9,7 +9,7 @@
         var deferred = $q.defer();
 
         // Function to get only liked movies
-        this.getLikedMovies = function() {
+        this.getReviewedMovies = function() {
 
             return $http.get('/api/movies/liked')
                 .success(function(result) {

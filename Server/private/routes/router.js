@@ -60,18 +60,17 @@
             var _string_with_all_obj = '';
 
             for (var index in _jsonObj) {
-
                 var _obj = '(';
 
-                _obj += "'" + escapeHtml(_jsonObj[index].title.replace(',', '-')) + "'" + ',';
-                _obj += "'" + escapeHtml(_jsonObj[index].actors.replace(',', '-')) + "'" + ',';
-                _obj += "'" + escapeHtml(_jsonObj[index].director.replace(',', '-')) + "'" + ',';
+                _obj += "'" + escapeHtml(_jsonObj[index].title.replace(/,/g, '-')) + "'" + ',';
+                _obj += "'" + escapeHtml(_jsonObj[index].actors.replace(/,/g, '-')) + "'" + ',';
+                _obj += "'" + escapeHtml(_jsonObj[index].director.replace(/,/g, '-')) + "'" + ',';
                 _obj += "'" + _jsonObj[index].genre + "'" + ',';
                 _obj += _jsonObj[index].idleTime + ',';
                 _obj += "'" + _jsonObj[index].rated + "'" + ',';
                 _obj += _jsonObj[index].runtime + ',';
                 _obj += _jsonObj[index].talkTime + ',';
-                _obj += _jsonObj[index].timeToRead + ',';
+                _obj += "'" + _jsonObj[index].country.split(',')[0] + "'" + ',';
                 _obj += "'" + _jsonObj[index].year + "'" + ',';
                 _obj += _jsonObj[index].imdbRating + ',';
                 _obj += "'" + _jsonObj[index].poster + "'";
@@ -82,6 +81,7 @@
             }
 
             _string_with_all_obj = _string_with_all_obj.slice(0, -1);
+
             resolve(_string_with_all_obj);
         });
     }

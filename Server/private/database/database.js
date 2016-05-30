@@ -55,7 +55,7 @@
     // Function to insert movies in database
     exports.insertMovies = function(movies) {
         return new Promise(function(resolve, reject) {
-            client.query('INSERT INTO movies (title, actors,directors,genre, idletime, rated, runtime, talktime, timeToRead, year, imdbrating, poster) VALUES ' + movies, [], function(err, result) {
+            client.query('INSERT INTO movies (title, actors,directors,genre, idletime, rated, runtime, talktime, country, year, imdbrating, poster) VALUES ' + movies, [], function(err, result) {
                 if (err) {
                     reject(err);
                 } else {
@@ -81,7 +81,7 @@
     // Function to get all the data from a movie by id
     exports.getAllMovies = function(userID) {
         return new Promise(function(resolve, reject) {
-            client.query('select movies.*, movies_users.userid is not null as liked \
+            client.query('select movies.*, movies_users.liked , movies_users.userid is not null as liked \
                             from movies LEFT JOIN movies_users \
                             ON movies_users.movieid = movies.id and movies_users.userid = $1\
                             ORDER BY movies.id', userID, function(err, result) {
@@ -97,7 +97,20 @@
     // Function to get only liked movies
     exports.getLikedMovies = function(userID) {
         return new Promise(function(resolve, reject) {
-            client.query('select movies.* from movies, movies_users where movies_users.userID = $1 and movies_users.movieid = movies.id;', userID, function(err, result) {
+            client.query('select movies.* from movies, movies_users where movies_users.userID = $1 and movies_users.movieid = movies.id and movies_users.liked = true;', userID, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
+    // Function to get all reviewed movies
+    exports.getReviewedMovies = function(userID) {
+        return new Promise(function(resolve, reject) {
+            client.query('select movies.* from movies, movies_users where movies_users.userID = $1 and movies_users.movieid = movies.id', userID, function(err, result) {
                 if (err) {
                     reject(err);
                 } else {
@@ -108,9 +121,9 @@
     };
 
     // Function to insert a 'like' on certain movie
-    exports.insertLike = function(data) {
+    exports.insertReview = function(data) {
         return new Promise(function(resolve, reject) {
-            client.query('INSERT INTO movies_users (userid, movieID) VALUES($1,$2)', data, function(err, result) {
+            client.query('INSERT INTO movies_users (userid, movieID, liked) VALUES($1,$2, $3)', data, function(err, result) {
                 if (err) {
                     console.log(err);
                     reject(err);
