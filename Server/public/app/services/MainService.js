@@ -80,9 +80,9 @@
         };
 
         // Scope function to like movie
-        this.likedMovie = function(_movieID) {
+        this.likedMovie = function(_movieID, review) {
 
-            return $http.post('/api/movie', { id: _movieID })
+            return $http.post('/api/movie', { id: _movieID, review: review })
                 .success(function(result) {
                     deferred.resolve(result);
                 })

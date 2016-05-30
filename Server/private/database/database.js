@@ -110,7 +110,7 @@
     // Function to get all reviewed movies
     exports.getReviewedMovies = function(userID) {
         return new Promise(function(resolve, reject) {
-            client.query('select movies.* from movies, movies_users where movies_users.userID = $1 and movies_users.movieid = movies.id', userID, function(err, result) {
+            client.query('select movies.*, movies_users.liked from movies, movies_users where movies_users.userID = $1 and movies_users.movieid = movies.id', userID, function(err, result) {
                 if (err) {
                     reject(err);
                 } else {

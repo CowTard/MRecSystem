@@ -84,9 +84,14 @@
         $scope.likedMovie = function(_movieID, isMovieLiked) {
 
             if (!isMovieLiked) {
-                MainService.likedMovie(_movieID)
-                    .then(function(_result) {
 
+                // Review is for now hardcoded.
+                var review = true;
+
+                MainService.likedMovie(_movieID, review)
+                    .then(function(_result) {
+                        // hack...
+                        $scope.getMovies();
                     })
                     .catch(function(err) {
                         $scope.user_Message = err.data;

@@ -104,7 +104,7 @@
                                 .then(function(_result) {
 
                                     analizeLikedMovies(_result)
-                                        .then(function(_) {
+                                        .then(function() {
                                             res.status(200).send('OK');
                                         })
                                         .catch(function(_err) {
@@ -112,6 +112,7 @@
                                         });
                                 })
                                 .catch(function(err) {
+                                    console.log(err);
                                     res.status(406).send('We could not resolve your request.');
                                 });
                         })
@@ -150,7 +151,13 @@
 
             database.getReviewedMovies([1])
                 .then(function(result) {
-                    res.status(200).send(result);
+                    analizeLikedMovies(result)
+                        .then(function() {
+                            res.status(200).send(result);
+                        })
+                        .catch(function(err) {
+                            res.status(406).send(err);
+                        });
                 })
                 .catch(function(res) {
                     res.status(406).send('ok');
@@ -161,7 +168,6 @@
     // Function to analyze liked movies and return a new function
     function analizeLikedMovies(moviesArray) {
         return new Promise(function(resolve, reject) {
-
 
             //
             // ANALIZE FUNCTION
@@ -174,7 +180,7 @@
             //      Liked Directors vs Disliked Directors | If there's repetition improve. Contradition = ?
             // --> Genre
             //      Liked Genres vs Disliked Genres | If there's repetition improve. Contradition = ?
-            //  --> IdleTime, runtime, talktime, timetoread
+            //  --> IdleTime, runtime, talktime
             //      See function
             //  --> ImdbRating
             //      Calculate disparity
@@ -182,35 +188,123 @@
             //      Liked rates vs dislike rates | If there's repetition, improve. Contradition = ?
             //  --> Year
             //      Like decades vs dislike decades | If there's repetition, improve. Contradition = ?
-            //
-            // 
-
-            console.log(moviesArray);
+            //  --> Country
+            //      Like country vs dislike country | If there's repetition, improve. Contradition = ? 
 
             // Get liked and disliked actors
-            var dislikedActors = [];
-            var likedActors = [];
+
+            var actors = [
+                [], // Liked actors
+                [] // Disliked actors
+            ];
 
             // Get liked and disliked directors
-            var dislikedDirectors = [];
-            var likedDirectors = [];
+            var directors = [
+                [], // Liked directors
+                [] // Disliked directors
+            ];
 
             // Get liked and dislike genres
-            var dislikedGenres = [];
-            var likedGenres = [];
+            var genres = [
+                [], // Liked genres
+                [] // Disliked genres
+            ];
 
             // Get Liked and disliked rated
-            var dislikedRated = [];
-            var likedRated = [];
+            var rated = [
+                [], // Liked rated
+                [] // Disliked rated
+            ];
 
             // Get liked and disliked decades
-            var dislikedDecades = [];
-            var likedDecades = [];
+            var decades = [
+                [], // Liked decades
+                [] // Disliked decades
+            ];
 
-            for (var i = 0; i < len(moviesArray); i++) {
+            // Get liked and disliked countries
+            var countries = [
+                [], // liked countries
+                [] // Disliked countries
+            ];
 
-            }
+            // Get liked and disliked countries
+            var imdbrating = [
+                [], // liked ratings
+                [] // Disliked ratings
+            ];
 
+            // Get liked and disliked countries
+            var idleTime = [
+                [], // liked idle times
+                [] // Disliked idle times
+            ];
+
+            // Get liked and disliked countries
+            var talktime = [
+                [], // liked talk time
+                [] // Disliked talk time
+            ];
+
+            // Get liked and disliked countries
+            var runtime = [
+                [], // liked runtime
+                [] // Disliked runtime
+            ];
+
+            moviesArray.forEach(function(_movie, index) {
+
+                // Sorting actors
+                _movie.actors.split('- ').forEach(function(actor) {
+                    actors[_movie.liked & 1].push(actor);
+                });
+
+                // Sorting directors
+                _movie.directors.split('- ').forEach(function(director) {
+
+                    directors[_movie.liked & 1].push(director);
+                });
+
+                // Sorting genres
+                _movie.genre.split(', ').forEach(function(genre) {
+                    genres[_movie.liked & 1].push(genre);
+                });
+
+                // Sorting rate
+                rated[_movie.liked & 1].push(_movie.rated);
+
+                // Sorting countries
+                countries[_movie.liked & 1].push(_movie.country);
+
+                // Sorting years
+                // There is a bit of an hack here. We know for sure there isn't a movie that was released before 1920. 
+                // With that we can just take the third number and add a 0 to have decades without getting ambiguous
+                decades[_movie.liked & 1].push(_movie.year.split('')[2].toString() + '0');
+
+                // Sorting imdb rating
+                imdbrating[_movie.liked & 1].push(_movie.imdbrating);
+
+                // Sorting idle time
+                idleTime[_movie.liked & 1].push(_movie.idletime);
+
+                // Sorting talk time
+                talktime[_movie.liked & 1].push(_movie.talktime);
+
+                // Sorting runtime
+                runtime[_movie.liked & 1].push(_movie.runtime);
+            });
+
+            console.log('actors: ', actors);
+            console.log('directors: ', directors);
+            console.log('genres: ', genres);
+            console.log('rated: ', rated);
+            console.log('country: ', countries);
+            console.log('decades: ', decades);
+            console.log('IMDB: ', imdbrating);
+            console.log('country: ', countries);
+            console.log('IdleTime: ', idleTime);
+            console.log('Talk time: ', talktime);
+            console.log('Runtime: ', runtime);
             resolve();
         });
     }
