@@ -38,7 +38,7 @@ def request_extra_info(movie_id_list):
                                           json_variables['Rated'], json_variables['Runtime'],
                                           json_variables['Genre'], json_variables['Director'],
                                           json_variables['Actors'], json_variables['Poster'],
-                                          json_variables['imdbRating'], json_variables['Country']))
+                                          json_variables['imdbRating'], json_variables['Writer']))
         print('> Information of ' + json_variables['Title'] + ' completed.')
     return movies_objects
 

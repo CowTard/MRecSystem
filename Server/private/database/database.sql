@@ -26,7 +26,7 @@ CREATE TABLE ratingfunction (
 	rated DECIMAL NOT NULL,
 	runtime DECIMAL NOT NULL,
 	talktime DECIMAL NOT NULL,
-	country DECIMAL NOT NULL,
+	writers DECIMAL NOT NULL,
 	year DECIMAL NOT NULL,
 	imdbrating DECIMAL NOT NULL
 );
@@ -42,7 +42,7 @@ CREATE TABLE movies(
 	rated VARCHAR(10) NOT NULL,
 	runtime SMALLINT NOT NULL,
 	talktime SMALLINT NOT NULL,
-	country VARCHAR(20) NOT NULL,
+	writers VARCHAR(20) NOT NULL,
 	year VARCHAR(10) NOT NULL,
 	imdbrating DECIMAL NOT NULL,
 	poster VARCHAR(255) NOT NULL
@@ -70,7 +70,7 @@ CREATE FUNCTION insert_rating() RETURNS Trigger as $create_rating_row$
 		_temp numeric;
 	BEGIN
 		select currval(pg_get_serial_sequence('users','id')) INTO _temp;
-		INSERT INTO ratingfunction (userid,actors,directors, genre, idleTime, rated, runtime, talktime, country, year, imdbrating) VALUES (_temp,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1);
+		INSERT INTO ratingfunction (userid,actors,directors, genre, idleTime, rated, runtime, talktime, writers, year, imdbrating) VALUES (_temp,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1);
 		RETURN NULL;
 	END;
 $create_rating_row$ LANGUAGE plpgsql;	

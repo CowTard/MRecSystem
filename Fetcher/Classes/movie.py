@@ -6,7 +6,7 @@ import re
 
 class Movie:
 
-    def __init__(self, title, id, year, rated, runtime, genre, director, actors, poster, imdbrating, country):
+    def __init__(self, title, id, year, rated, runtime, genre, director, actors, poster, imdbrating, writer):
         self.title = title
         self.id = id
         self.year = year
@@ -19,7 +19,7 @@ class Movie:
         self.imdbRating = imdbrating
         self.talkTime = 0
         self.idleTime = 0
-        self.country = country
+        self.writer = writer
 
     # Get subtitles for this movie object.
     def get_str_files(self):

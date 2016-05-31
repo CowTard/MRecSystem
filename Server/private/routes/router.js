@@ -70,7 +70,7 @@
                 _obj += "'" + _jsonObj[index].rated + "'" + ',';
                 _obj += _jsonObj[index].runtime + ',';
                 _obj += _jsonObj[index].talkTime + ',';
-                _obj += "'" + _jsonObj[index].country.split(',')[0] + "'" + ',';
+                _obj += "'" + _jsonObj[index].writers.replace(/ *\([^)]*\) */g, "") + "'" + ',';
                 _obj += "'" + _jsonObj[index].year + "'" + ',';
                 _obj += _jsonObj[index].imdbRating + ',';
                 _obj += "'" + _jsonObj[index].poster + "'";

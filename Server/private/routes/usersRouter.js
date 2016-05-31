@@ -156,10 +156,13 @@
                             res.status(200).send(result);
                         })
                         .catch(function(err) {
+                            console.log(err);
                             res.status(406).send(err);
                         });
                 })
-                .catch(function(res) {
+                .catch(function(_err) {
+
+                    console.log(_err);
                     res.status(406).send('ok');
                 });
         });
@@ -252,73 +255,173 @@
                 [] // Disliked runtime
             ];
 
-            moviesArray.forEach(function(_movie, index) {
-
-                // Sorting actors
-                _movie.actors.split('- ').forEach(function(actor) {
-                    actors[_movie.liked & 1].push(actor);
-                });
-
-                // Sorting directors
-                _movie.directors.split('- ').forEach(function(director) {
-
-                    directors[_movie.liked & 1].push(director);
-                });
-
-                // Sorting genres
-                _movie.genre.split(', ').forEach(function(genre) {
-                    genres[_movie.liked & 1].push(genre);
-                });
-
-                // Sorting rate
-                rated[_movie.liked & 1].push(_movie.rated);
-
-                // Sorting countries
-                countries[_movie.liked & 1].push(_movie.country);
-
-                // Sorting years
-                // There is a bit of an hack here. We know for sure there isn't a movie that was released before 1920. 
-                // With that we can just take the third number and add a 0 to have decades without getting ambiguous
-                decades[_movie.liked & 1].push(_movie.year.split('')[2].toString() + '0');
-
-                // Sorting imdb rating
-                imdbrating[_movie.liked & 1].push(_movie.imdbrating);
-
-                // Sorting idle time
-                idleTime[_movie.liked & 1].push(_movie.idletime);
-
-                // Sorting talk time
-                talktime[_movie.liked & 1].push(_movie.talktime);
-
-                // Sorting runtime
-                runtime[_movie.liked & 1].push(_movie.runtime);
-            });
-
             database.getRatingFunction([id])
                 .then(function(functionParameters) {
-                    console.log(functionParameters);
-                    console.log('actors: ', actors);
-                    console.log('directors: ', directors);
-                    console.log('genres: ', genres);
-                    console.log('rated: ', rated);
-                    console.log('country: ', countries);
-                    console.log('decades: ', decades);
-                    console.log('IMDB: ', imdbrating);
-                    console.log('country: ', countries);
-                    console.log('IdleTime: ', idleTime);
-                    console.log('Talk time: ', talktime);
-                    console.log('Runtime: ', runtime);
+
+                    moviesArray.forEach(function(_movie, index) {
+
+                        // Sorting actors
+                        _movie.actors.split('- ').forEach(function(actor) {
+                            actors[_movie.liked & 1].push(actor);
+                        });
+
+                        // Sorting directors
+                        _movie.directors.split('- ').forEach(function(director) {
+
+                            directors[_movie.liked & 1].push(director);
+                        });
+
+                        // Sorting genres
+                        _movie.genre.split(', ').forEach(function(genre) {
+                            genres[_movie.liked & 1].push(genre);
+                        });
+
+                        // Sorting rate
+                        rated[_movie.liked & 1].push(_movie.rated);
+
+                        // Sorting countries
+                        countries[_movie.liked & 1].push(_movie.country);
+
+                        // Sorting years
+                        // There is a bit of an hack here. We know for sure there isn't a movie that was released before 1920. 
+                        // With that we can just take the third number and add a 0 to have decades without getting ambiguous
+                        decades[_movie.liked & 1].push(_movie.year.split('')[2].toString() + '0');
+
+                        // Sorting imdb rating
+                        imdbrating[_movie.liked & 1].push(_movie.imdbrating);
+
+                        // Sorting idle time
+                        idleTime[_movie.liked & 1].push(_movie.idletime);
+
+                        // Sorting talk time
+                        talktime[_movie.liked & 1].push(_movie.talktime);
+
+                        // Sorting runtime
+                        runtime[_movie.liked & 1].push(_movie.runtime);
+                    });
+
+                    var importance = {
+                        'actors': similiarity(actors),
+                        'directors': similiarity(directors),
+                        'genre': similiarity(genres),
+                        'rated': similiarity(rated),
+                        'countries': similiarity(countries),
+                        //'decades': similiarity(decades),
+                    };
+
+                    console.log(importance);
                     resolve();
                 })
                 .catch(function(err) {
+                    console.log(err);
                     reject('We couldn\'t resolve your request');
                 });
         });
     }
 
-    // Function that calculates 
+    // Function that calculates the similiarity
+    /*
+		Need major improvement on duration.
+    */
     function similiarity(a_data) {
 
-    };
+        var unique_entries = 0,
+            changeable_a_data_0 = a_data[0],
+            changeable_a_data_1 = a_data[1],
+            positive_reps = {},
+            negative_reps = {},
+            balance = positive_reps;
+
+
+        // Get number of repetitions in liked content
+        for (var i = 0; i < changeable_a_data_1.length; i++) {
+
+            if (positive_reps.hasOwnProperty(changeable_a_data_1[i])) {
+                continue;
+            } else {
+                positive_reps[changeable_a_data_1[i]] = 1;
+
+                unique_entries += 1;
+
+                for (var j = 0; j < changeable_a_data_1.length; j++) {
+                    if (j != i && changeable_a_data_1[i] == changeable_a_data_1[j]) {
+                        positive_reps[changeable_a_data_1[i]] += 1;
+                    }
+                }
+            }
+        }
+
+        // Get number of repetitions in disliked content
+        for (var t = 0; t < changeable_a_data_0.length; t++) {
+
+            if (negative_reps.hasOwnProperty(changeable_a_data_0[t])) {
+                continue;
+            } else {
+                negative_reps[changeable_a_data_0[t]] = 1;
+
+                unique_entries += 1;
+
+                for (var p = 0; p < changeable_a_data_0.length; p++) {
+                    if (p != t && changeable_a_data_0[t] == changeable_a_data_0[p]) {
+                        negative_reps[changeable_a_data_0[t]] += 1;
+                    }
+                }
+            }
+        }
+
+        // Get balance
+        for (var key in negative_reps) {
+            if (balance.hasOwnProperty(key)) {
+                balance[key] -= negative_reps[key];
+            } else {
+                balance[key] = negative_reps[key];
+            }
+        }
+
+        // Get some data
+        // Get most liked parameters
+
+        var most_liked_param = [],
+            most_liked_param_number_of_rep = 0,
+            numberOfRepetitions = 0,
+            number_of_keys = 0,
+            sumRepetions = 0;
+
+        for (key in balance) {
+            if (balance.hasOwnProperty(key)) {
+
+                number_of_keys += 1;
+
+                if (balance[key] > most_liked_param_number_of_rep) {
+                    for (var value in most_liked_param) {
+                        if (most_liked_param[value] < balance[key]) {
+                            delete most_liked_param[value];
+                        }
+                    }
+                    most_liked_param[key] = balance[key];
+                    most_liked_param_number_of_rep = balance[key];
+                    numberOfRepetitions += balance[key];
+                } else if (balance[key] > 1 && balance[key] < -1) {
+                    numberOfRepetitions += balance[key];
+                }
+
+                sumRepetions += balance[key];
+            }
+        }
+
+        var mediamRepetions = sumRepetions / number_of_keys;
+
+        //console.log('Pref: ', most_liked_param);
+        //console.log('Media: ', mediamRepetions);
+
+        //console.log('[' + most_liked_param + ', ' + most_liked_param_number_of_rep + ', ' + numberOfRepetitions + ', ' + number_of_keys + ']');
+
+        // Return: Bigger repetitions and more repetitions => more importance
+
+        var importance = Math.sqrt((most_liked_param_number_of_rep - mediamRepetions) * numberOfRepetitions / number_of_keys);
+
+        // Function sqrt (  x_times_favorito * (x_times_favorito - median Repetitions)^2   )
+        return { 'pref_param': most_liked_param, 'importance': importance };
+    }
 
 }());
