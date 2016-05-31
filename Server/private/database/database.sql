@@ -56,6 +56,13 @@ CREATE TABLE movies_users(
 	PRIMARY KEY (movieID, userID)
 );
 
+-- user similarity
+CREATE TABLE users_similarity(
+	user1ID BIGINT REFERENCES users(id),
+	user2ID BIGINT REFERENCES users(id),
+	PRIMARY KEY (user1ID, user2ID)
+);
+
 -- predictions
 CREATE TABLE predictions(
 	movieID BIGINT REFERENCES movies(id),
