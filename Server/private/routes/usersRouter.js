@@ -175,7 +175,7 @@
             //
             // ANALIZE FUNCTION
             //  
-            // Params = [ Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, country, year]
+            // Params = [ Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, writers, year]
             //
             // --> Actors
             //      Liked Actors vs Disliked Actors | If there's repetition, improve. Contradition = ?
@@ -191,8 +191,8 @@
             //      Liked rates vs dislike rates | If there's repetition, improve. Contradition = ?
             //  --> Year
             //      Like decades vs dislike decades | If there's repetition, improve. Contradition = ?
-            //  --> Country
-            //      Like country vs dislike country | If there's repetition, improve. Contradition = ? 
+            //  --> writers
+            //      Like writers vs dislike writers | If there's repetition, improve. Contradition = ? 
 
             // Get liked and disliked actors
 
@@ -225,10 +225,10 @@
                 [] // Disliked decades
             ];
 
-            // Get liked and disliked countries
-            var countries = [
-                [], // liked countries
-                [] // Disliked countries
+            // Get liked and disliked writers
+            var writers = [
+                [], // liked writers
+                [] // Disliked writers
             ];
 
             // Get liked and disliked countries
@@ -279,8 +279,10 @@
                         // Sorting rate
                         rated[_movie.liked & 1].push(_movie.rated);
 
-                        // Sorting countries
-                        countries[_movie.liked & 1].push(_movie.country);
+                        // Sorting writers
+                        _movie.writers.split('- ').forEach(function(writer) {
+                            writers[_movie.liked & 1].push(writer);
+                        });
 
                         // Sorting years
                         // There is a bit of an hack here. We know for sure there isn't a movie that was released before 1920. 
@@ -301,12 +303,12 @@
                     });
 
                     var importance = {
-                        'actors': similiarity(actors),
-                        'directors': similiarity(directors),
-                        'genre': similiarity(genres),
-                        'rated': similiarity(rated),
-                        'countries': similiarity(countries),
-                        //'decades': similiarity(decades),
+                        'actors': similarity(actors),
+                        'directors': similarity(directors),
+                        'genre': similarity(genres),
+                        'rated': similarity(rated),
+                        'writers': similarity(writers),
+                        'decades': similarity(decades),
                     };
 
                     console.log(importance);
@@ -319,11 +321,11 @@
         });
     }
 
-    // Function that calculates the similiarity
+    // Function that calculates the similarity
     /*
 		Need major improvement on duration.
     */
-    function similiarity(a_data) {
+    function similarity(a_data) {
 
         var unique_entries = 0,
             changeable_a_data_0 = a_data[0],
@@ -339,7 +341,7 @@
             if (positive_reps.hasOwnProperty(changeable_a_data_1[i])) {
                 continue;
             } else {
-                positive_reps[changeable_a_data_1[i]] = 1;
+                positive_reps[changeable_a_data_1[i]] = 0;
 
                 unique_entries += 1;
 
@@ -381,38 +383,36 @@
         // Get some data
         // Get most liked parameters
 
-        var most_liked_param = [],
-            most_liked_param_number_of_rep = 0,
+        var most_liked_param = '',
+            most_liked_param_number_of_rep = -500,
             numberOfRepetitions = 0,
             number_of_keys = 0,
             sumRepetions = 0;
 
+
         for (key in balance) {
+
             if (balance.hasOwnProperty(key)) {
 
                 number_of_keys += 1;
-
                 if (balance[key] > most_liked_param_number_of_rep) {
-                    for (var value in most_liked_param) {
-                        if (most_liked_param[value] < balance[key]) {
-                            delete most_liked_param[value];
-                        }
-                    }
-                    most_liked_param[key] = balance[key];
+
+                    most_liked_param = key;
                     most_liked_param_number_of_rep = balance[key];
-                    numberOfRepetitions += balance[key];
+                    numberOfRepetitions += Math.abs(balance[key]);
                 } else if (balance[key] > 1 && balance[key] < -1) {
-                    numberOfRepetitions += balance[key];
+                    numberOfRepetitions += Math.abs(balance[key]);
                 }
 
                 sumRepetions += balance[key];
             }
         }
 
-        var mediamRepetions = sumRepetions / number_of_keys;
+        var mediamRepetions = Math.abs(sumRepetions / number_of_keys);
 
+        //console.log('Balance:', balance);
         //console.log('Pref: ', most_liked_param);
-        //console.log('Media: ', mediamRepetions);
+
 
         //console.log('[' + most_liked_param + ', ' + most_liked_param_number_of_rep + ', ' + numberOfRepetitions + ', ' + number_of_keys + ']');
 
@@ -422,6 +422,11 @@
 
         // Function sqrt (  x_times_favorito * (x_times_favorito - median Repetitions)^2   )
         return { 'pref_param': most_liked_param, 'importance': importance };
+    }
+
+    // Function to calculate similarity between times
+    function time_similarity(a_data) {
+        console.log(a_data);
     }
 
 }());

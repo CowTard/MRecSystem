@@ -55,7 +55,7 @@
     // Function to insert movies in database
     exports.insertMovies = function(movies) {
         return new Promise(function(resolve, reject) {
-            client.query('INSERT INTO movies (title, actors,directors,genre, idletime, rated, runtime, talktime, country, year, imdbrating, poster) VALUES ' + movies, [], function(err, result) {
+            client.query('INSERT INTO movies (title, actors,directors,genre, idletime, rated, runtime, talktime, writers, year, imdbrating, poster) VALUES ' + movies, [], function(err, result) {
                 if (err) {
                     reject(err);
                 } else {

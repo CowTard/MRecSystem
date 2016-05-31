@@ -81,12 +81,9 @@
         };
 
         // Scope function to like movie
-        $scope.likedMovie = function(_movieID, isMovieLiked) {
+        $scope.likedMovie = function(_movieID, isMovieLiked, review) {
 
             if (!isMovieLiked) {
-
-                // Review is for now hardcoded.
-                var review = true;
 
                 MainService.likedMovie(_movieID, review)
                     .then(function(_result) {
