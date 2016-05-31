@@ -1,3 +1,5 @@
+<link href="../../css/dashboard.css" rel="stylesheet">
+
 <div ng-include="'app/views/shared/header.ejs'"></div>
 
 <div class="container" ng-init="getMovies()">
@@ -8,30 +10,82 @@
     </div>
 
     <div ng-repeat="movie in _moviesOnDatabase" ng-if="$index % 4 == 0" class="row">
-        <div class="col-lg-3 col-md-4 col-xs-6 thumb">
+        <div class="col-lg-3 col-md-4 col-xs-6 thumb nd-wrap nd-style-5">
             <a class="thumbnail" href="#">
-                <img ng-click="likedMovie(movie.id, movie.liked)" class="img-responsive" width="250" height="400" ng-src="{{movie.poster}}">
+                <img class="img-responsive" width="250" height="400" ng-src="{{movie.poster}}">
+                <div class="nd-content">
+                    <div class="nd-content_inner">
+                        <div class="nd-content_inner1">
+                            <h3 class="nd-title"><span>{{movie.title}}</span></h3>
+                            <span class="nd-icon">
+                                <span class="fa fa-thumbs-o-down fa-fw"></span>
+                            </span>
+                            <span class="nd-icon">
+                                <span ng-click="likedMovie(movie.id, movie.liked)" class="fa fa-thumbs-o-up fa-fw"></span>
+                            </span>
+                        </div>                  
+                    </div>              
+                </div>
             </a>
             <h6 class="text-center">{{movie.title}}</h6>
         </div>
-        <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 1)">
+        <div class="col-lg-3 col-md-4 col-xs-6 thumb nd-wrap nd-style-5" ng-if="_moviesOnDatabase.length > ($index + 1)">
             <p style="display: none">{{_moviesOnDatabase[$index+1].id}}</p>
             <a ng-disabled="_moviesOnDatabase[$index+1]" class="thumbnail" href="#">
-                <img ng-click="likedMovie(_moviesOnDatabase[$index+1].id, _moviesOnDatabase[$index+1].liked)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+1].poster}}" >
+                <img class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+1].poster}}" >
+                <div class="nd-content">
+                    <div class="nd-content_inner">
+                        <div class="nd-content_inner1">
+                            <h3 class="nd-title"><span>{{_moviesOnDatabase[$index+1].title}}</span></h3>
+                            <span class="nd-icon">
+                                <span class="fa fa-thumbs-o-down fa-fw"></span>
+                            </span>
+                            <span ng-click="likedMovie(_moviesOnDatabase[$index+1].id, _moviesOnDatabase[$index+1].liked)" class="nd-icon">
+                                <span class="fa fa-thumbs-o-up fa-fw"></span>
+                            </span>
+                        </div>                  
+                    </div>              
+                </div>
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+1].title}}</h6>
         </div>
-        <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 2)">
+        <div class="col-lg-3 col-md-4 col-xs-6 thumb nd-wrap nd-style-5" ng-if="_moviesOnDatabase.length > ($index + 2)">
             <p style="display: none">{{_moviesOnDatabase[$index+2].id}}</p>
             <a ng-disabled="_moviesOnDatabase[$index+2].liked" class="thumbnail" href="#">
-                <img ng-click="likedMovie(_moviesOnDatabase[$index+2].id, _moviesOnDatabase[$index+2].liked)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+2].poster}}">
+                <img class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+2].poster}}">
+                <div class="nd-content">
+                    <div class="nd-content_inner">
+                        <div class="nd-content_inner1">
+                            <h3 class="nd-title"><span>{{_moviesOnDatabase[$index+2].title}}</span></h3>
+                            <span class="nd-icon">
+                                <span class="fa fa-thumbs-o-down fa-fw"></span>
+                            </span>
+                            <span ng-click="likedMovie(_moviesOnDatabase[$index+2].id, _moviesOnDatabase[$index+2].liked)" class="nd-icon">
+                                <span class="fa fa-thumbs-o-up fa-fw"></span>
+                            </span>
+                        </div>                  
+                    </div>              
+                </div>
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+2].title}}</h6>
         </div>
-        <div class="col-lg-3 col-md-4 col-xs-6 thumb" ng-if="_moviesOnDatabase.length > ($index + 3)">
+        <div class="col-lg-3 col-md-4 col-xs-6 thumb nd-wrap nd-style-5" ng-if="_moviesOnDatabase.length > ($index + 3)">
             <p style="display: none">{{_moviesOnDatabase[$index+3].id}}</p>
             <a ng-disabled="_moviesOnDatabase[$index+3].liked" class="thumbnail" href="#">
-                <img ng-click="likedMovie(_moviesOnDatabase[$index+3].id, _moviesOnDatabase[$index+3].liked)" class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+3].poster}}">
+                <img class="img-responsive" width="250" height="400" ng-src="{{_moviesOnDatabase[$index+3].poster}}">
+                <div class="nd-content">
+                    <div class="nd-content_inner">
+                        <div class="nd-content_inner1">
+                            <h3 class="nd-title"><span>{{_moviesOnDatabase[$index+3].title}}</span></h3>
+                            <span class="nd-icon">
+                                <span class="fa fa-thumbs-o-down fa-fw"></span>
+                            </span>
+                            <span ng-click="likedMovie(_moviesOnDatabase[$index+3].id, _moviesOnDatabase[$index+3].liked)" class="nd-icon">
+                                <span class="fa fa-thumbs-o-up fa-fw"></span>
+                            </span>
+                        </div>                  
+                    </div>              
+                </div>
             </a>
             <h6 class="text-center">{{_moviesOnDatabase[$index+3].title}}</h6>
         </div>

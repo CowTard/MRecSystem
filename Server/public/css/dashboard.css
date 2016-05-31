@@ -1,0 +1,250 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
+/* ============================== STYLE FOR IMAGE - TITLE - CONTENT - ICON ============================== */
+
+.nd-wrap {
+    overflow: hidden;
+    text-align: center;
+    margin: 0 auto;
+    position: relative;
+    display: inline-block;
+}
+
+.nd-wrap img {
+    width: 350px;
+    display: block;
+}
+
+.nd-title {
+    position: relative;
+    top: -150px;
+    opacity: 0;
+    margin: 0 0 30px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    -webkit-transition: all 1s ease 0.01s;
+    transition: all 1s ease 0.01s;
+}
+
+.nd-title span {
+    color: #fff;
+    padding: 0 20px 15px;
+    border-bottom: 1px solid #ccc;
+    display: inline-block;
+}
+
+.nd-icon {
+    color: #000;
+    display: inline-block;
+    font-size: 25px;
+    margin: 0 5px;
+    opacity: 0;
+    position: relative;
+    cursor: pointer;
+    -webkit-transition-duration: 0.6s;
+    transition-duration: 0.6s;
+    -webkit-transition-timing-function: cubic-bezier(1.000, -0.530, 0.405, 1.425);
+    transition-timing-function: cubic-bezier(1.000, -0.530, 0.405, 1.425);
+}
+
+.nd-icon span {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 3px;
+    padding: 5px 30px 5px 5px;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.nd-icon:hover span {
+    background: #fff;
+    -webkit-transform: scale(1.1, 1.1);
+    transform: scale(1.1, 1.1);
+}
+
+.nd-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.nd-content_inner {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.nd-content_inner1 {
+    display: table-cell;
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+}
+
+
+/* =============== HOVER AREA =============== */
+
+.nd-wrap:hover .nd-icon,
+.nd-wrap:hover .nd-content,
+.nd-wrap:hover .nd-title {
+    opacity: 1;
+    top: 0;
+}
+
+.nd-wrap:hover .nd-title {
+    -webkit-transition: all 0.5s cubic-bezier(1.000, -0.530, 0.405, 1.425) 0.01s;
+    transition: all 0.5s cubic-bezier(1.000, -0.530, 0.405, 1.425) 0.01s;
+}
+
+.nd-wrap:hover .nd-content {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+
+/* =============== SET DELAY FOR ICONS WHEN HOVER =============== */
+
+.nd-content .nd-icon:nth-of-type(1) {
+    -webkit-transition-delay: 0.1s;
+    transition-delay: 0.1s;
+}
+
+.nd-content .nd-icon:nth-of-type(2) {
+    -webkit-transition-delay: 0.15s;
+    transition-delay: 0.15s;
+}
+
+.nd-content .nd-icon:nth-of-type(3) {
+    -webkit-transition-delay: 0.2s;
+    transition-delay: 0.2s;
+}
+
+.nd-content .nd-icon:nth-of-type(4) {
+    -webkit-transition-delay: 0.25s;
+    transition-delay: 0.25s;
+}
+
+
+/* ============================== HOVER STYLE ============================== */
+
+
+/* =============== STYLE 1 =============== */
+
+.nd-style-1 .nd-icon {
+    top: 150px;
+}
+
+
+/* =============== STYLE 2 =============== */
+
+.nd-style-2 .nd-icon {
+    -webkit-transform: scale(0, 0);
+    transform: scale(0, 0);
+}
+
+.nd-wrap.nd-style-2:hover .nd-icon {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+
+/* =============== STYLE 3 =============== */
+
+.nd-style-3 .nd-icon {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.nd-wrap.nd-style-3:hover .nd-icon {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+
+
+/* =============== STYLE 4 =============== */
+
+.nd-style-4 .nd-icon {
+    -webkit-transform: scale(1.5, 1.5);
+    transform: scale(1.5, 1.5);
+}
+
+.nd-wrap.nd-style-4:hover .nd-icon {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+
+/* =============== STYLE 5 =============== */
+
+.nd-wrap.nd-style-5:hover .nd-title {
+    -webkit-transition: all 0.5s ease 0.01s;
+    transition: all 0.5s ease 0.01s;
+}
+
+.nd-style-5 .nd-icon {
+    top: 150px;
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+}
+
+
+/* =============== STYLE 6 =============== */
+
+.nd-wrap.nd-style-6:hover .nd-title {
+    -webkit-transition: all 0.5s ease 0.01s;
+    transition: all 0.5s ease 0.01s;
+}
+
+.nd-style-6 .nd-icon {
+    -webkit-transform: scale(0, 0);
+    transform: scale(0, 0);
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+}
+
+.nd-wrap.nd-style-6:hover .nd-icon {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+
+/* =============== STYLE 7 =============== */
+
+.nd-wrap.nd-style-7:hover .nd-title {
+    -webkit-transition: all 0.5s ease 0.01s;
+    transition: all 0.5s ease 0.01s;
+}
+
+.nd-style-7 .nd-icon {
+    -webkit-transform: scale(1.5, 1.5);
+    transform: scale(1.5, 1.5);
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+}
+
+.nd-wrap.nd-style-7:hover .nd-icon {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+
+/* =============== STYLE 8 =============== */
+
+.nd-wrap.nd-style-8:hover .nd-title {
+    -webkit-transition: all 0.5s ease 0.01s;
+    transition: all 0.5s ease 0.01s;
+}
+
+.nd-style-8 .nd-icon {
+    -webkit-transform: rotate(180deg) scale(1.5, 1.5);
+    transform: rotate(180deg) scale(1.5, 1.5);
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+}
+
+.nd-wrap.nd-style-8:hover .nd-icon {
+    -webkit-transform: rotate(360deg) scale(1, 1);
+    transform: rotate(360deg) scale(1, 1);
+}
