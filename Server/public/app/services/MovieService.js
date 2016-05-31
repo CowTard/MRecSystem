@@ -11,7 +11,7 @@
         // Function to get only liked movies
         this.getReviewedMovies = function() {
 
-            return $http.get('/api/movies/liked')
+            return $http.get('/api/movies/reviewed')
                 .success(function(result) {
                     deferred.resolve(result);
                 })

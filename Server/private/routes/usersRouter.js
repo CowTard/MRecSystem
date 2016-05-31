@@ -126,6 +126,28 @@
         });
 
         // Route that returns all liked movies from the requester
+        server.get('/api/movies/reviewed', function(req, res) {
+
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(_info) {
+                    database.getReviewedMovies([_info.id])
+                        .then(function(result) {
+                            res.status(200).send(result);
+                        })
+                        .catch(function(err) {
+                            res.status(406).send(err);
+                        });
+                })
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not resolve your request.');
+                });
+
+        });
+
+        // Route that returns all liked movies from the requester
         server.get('/api/movies/liked', function(req, res) {
 
             // Get user in question by cookie
