@@ -398,7 +398,7 @@
 
     // Function that calculates the similiarity
     /*
-		Need major improvement on duration.
+        Need major improvement on duration.
     */
     function similiarity(a_data) {
 
@@ -519,11 +519,11 @@
                         var diffRated = Math.abs(functionLoggedUser[0].rated - functionsToCompare[i].rated);
                         var diffRuntime = Math.abs(functionLoggedUser[0].runtime - functionsToCompare[i].runtime);
                         var diffTalktime = Math.abs(functionLoggedUser[0].talktime - functionsToCompare[i].talktime);
-                        var diffCountry = Math.abs(functionLoggedUser[0].country - functionsToCompare[i].country);
+                        var diffWriters = Math.abs(functionLoggedUser[0].writers - functionsToCompare[i].writers);
                         var diffYear = Math.abs(functionLoggedUser[0].year - functionsToCompare[i].year);
                         var diffImdbrating = Math.abs(functionLoggedUser[0].imdbrating - functionsToCompare[i].imdbrating);
 
-                        var variation = diffActors + diffDirectors + diffGenre + diffIdletime + diffRated + diffRuntime + diffTalktime + diffCountry + diffYear + diffImdbrating;
+                        var variation = diffActors + diffDirectors + diffGenre + diffIdletime + diffRated + diffRuntime + diffTalktime + diffWriters + diffYear + diffImdbrating;
                         if (bestVariation == null || variation < bestVariation) {
                             bestVariation = variation;
                             mostSimilarUserID = functionsToCompare[i].userid;
@@ -548,16 +548,15 @@
             var similarMovies = [];
             for (i = 0; i < moviesLoggedUser.length; i++) {
                 for (j = 0; j < moviesOthers.length; j++) {
-                    if (moviesLoggedUser[i].id == moviesOthers[j].movieid) {
+                    if (moviesLoggedUser[i].id == moviesOthers[j].movieid)
                         similarMovies.push(moviesOthers[j].userid);
-                    }
+
                 }
             }
 
             mostSimilarUserID = getTheHighestOcurrence(similarMovies);
 
             resolve(mostSimilarUserID);
-
 
         });
 
