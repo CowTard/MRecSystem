@@ -166,6 +166,80 @@
                     res.status(406).send('ok');
                 });
         });
+
+        server.get('/testSimilarRating', function(req, res) {
+
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(loggedUser) {
+                    database.getRatingFunctionsOtherUsers(loggedUser.id)
+                        .then(function(functionsToCompare) {
+                            similarityBetweenUsersRating(loggedUser.id, functionsToCompare)
+                                .then(function(bestUserID) {
+                                    database.insertUserSimilarity(loggedUser.id, bestUserID)
+                                        .then(function() {
+                                            res.status(200).send();
+                                        })
+                                        .catch(function(err) {
+                                            res.status(406).send(err);
+                                        });
+                                })
+                                .catch(function(err) {
+                                    res.status(406).send(err);
+                                });
+
+                        })
+                        .catch(function(err) {
+                            res.status(406).send('Email is not valid. We could not reference this like to your account.');
+                        });
+
+                })
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not reference this like to your account.');
+                });
+
+        });
+
+        server.get('/testSimilarMovies', function(req, res) {
+
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(loggedUser) {
+                    database.getMoviesLikedByOtherUsers(loggedUser.id)
+                        .then(function(moviesOthers) {
+                            database.getLikedMovies(loggedUser.id)
+                                .then(function(moviesLoggedUser) {
+                                    similarityBetweenUsersMovies(moviesLoggedUser, moviesOthers)
+                                        .then(function(bestUserID) {
+                                            database.insertUserSimilarity(loggedUser.id, bestUserID)
+                                                .then(function() {
+                                                    res.status(200).send();
+                                                })
+                                                .catch(function(err) {
+                                                    res.status(406).send(err);
+                                                });
+                                            res.status(200).send();
+                                        })
+                                        .catch(function(err) {
+                                            res.status(406).send(err);
+                                        });
+                                })
+                                .catch(function(err) {
+                                    res.status(406).send(err);
+                                });
+                        })
+                        .catch(function(err) {
+                            res.status(406).send(err);
+                        });
+                })
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not reference this like to your account.');
+                });
+
+        });
+
     };
 
     // Function to analyze liked movies and return a new function
@@ -427,6 +501,88 @@
     // Function to calculate similarity between times
     function time_similarity(a_data) {
         console.log(a_data);
+    }
+
+    //Function that calculates similarity between users and return the most similar
+    function similarityBetweenUsersRating(loggedUserID, functionsToCompare) {
+
+        return new Promise(function(resolve, reject) {
+            var i;
+            var mostSimilarUserID = null;
+            var bestVariation = null;
+
+            database.getRatingFunction(loggedUserID)
+                .then(function(functionLoggedUser) {
+                    for (i = 0; i < functionsToCompare.length; i++) {
+                        var diffActors = Math.abs(functionLoggedUser[0].actors - functionsToCompare[i].actors);
+                        var diffDirectors = Math.abs(functionLoggedUser[0].directors - functionsToCompare[i].directors);
+                        var diffGenre = Math.abs(functionLoggedUser[0].genre - functionsToCompare[i].genre);
+                        var diffIdletime = Math.abs(functionLoggedUser[0].idletime - functionsToCompare[i].idletime);
+                        var diffRated = Math.abs(functionLoggedUser[0].rated - functionsToCompare[i].rated);
+                        var diffRuntime = Math.abs(functionLoggedUser[0].runtime - functionsToCompare[i].runtime);
+                        var diffTalktime = Math.abs(functionLoggedUser[0].talktime - functionsToCompare[i].talktime);
+                        var diffCountry = Math.abs(functionLoggedUser[0].country - functionsToCompare[i].country);
+                        var diffYear = Math.abs(functionLoggedUser[0].year - functionsToCompare[i].year);
+                        var diffImdbrating = Math.abs(functionLoggedUser[0].imdbrating - functionsToCompare[i].imdbrating);
+
+                        var variation = diffActors + diffDirectors + diffGenre + diffIdletime + diffRated + diffRuntime + diffTalktime + diffCountry + diffYear + diffImdbrating;
+                        if (bestVariation == null || variation < bestVariation) {
+                            bestVariation = variation;
+                            mostSimilarUserID = functionsToCompare[i].userid;
+                        }
+                    }
+                    resolve(mostSimilarUserID);
+                })
+                .catch(function(err) {
+                    reject('We couldn\'t resolve your request');
+                });
+
+        });
+
+    }
+
+    //Function that calculates similarity between users and return the most similar
+    function similarityBetweenUsersMovies(moviesLoggedUser, moviesOthers) {
+
+        return new Promise(function(resolve, reject) {
+            var i, j;
+            var mostSimilarUserID = null;
+            var similarMovies = [];
+            for (i = 0; i < moviesLoggedUser.length; i++) {
+                for (j = 0; j < moviesOthers.length; j++) {
+                    if (moviesLoggedUser[i].id == moviesOthers[j].movieid) {
+                        similarMovies.push(moviesOthers[j].userid);
+                    }
+                }
+            }
+
+            mostSimilarUserID = getTheHighestOcurrence(similarMovies);
+
+            resolve(mostSimilarUserID);
+
+
+        });
+
+    }
+
+    function getTheHighestOcurrence(array) {
+        if (array.length == 0)
+            return null;
+        var modeMap = {};
+        var maxEl = array[0],
+            maxCount = 1;
+        for (var i = 0; i < array.length; i++) {
+            var el = array[i];
+            if (modeMap[el] == null)
+                modeMap[el] = 1;
+            else
+                modeMap[el]++;
+            if (modeMap[el] > maxCount) {
+                maxEl = el;
+                maxCount = modeMap[el];
+            }
+        }
+        return maxEl;;
     }
 
 }());

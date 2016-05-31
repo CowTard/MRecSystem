@@ -94,6 +94,44 @@
         });
     };
 
+    // Function to get all the rating functions except the one of the logged user
+    exports.getRatingFunctionsOtherUsers = function(userID) {
+        return new Promise(function(resolve, reject) {
+            client.query('select * from ratingfunction where userid != $1', userID, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
+    // Function to get the liked movies of all the users except the one of the logged user
+    exports.getMoviesLikedByOtherUsers = function(userID) {
+        return new Promise(function(resolve, reject) {
+            client.query('select * from movies_users where userid != $1', userID, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
+    exports.insertUserSimilarity = function(user1ID, user2ID) {
+        return new Promise(function(resolve, reject) {
+            client.query('INSERT INTO users_similarity VALUES($1,$2)', [user1ID, user2ID], function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
     // Function to get only liked movies
     exports.getLikedMovies = function(userID) {
         return new Promise(function(resolve, reject) {

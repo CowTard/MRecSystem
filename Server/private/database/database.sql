@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS ratingfunction CASCADE;
 DROP TABLE IF EXISTS movies CASCADE;
 DROP TABLE IF EXISTS predictions CASCADE;
 DROP TABLE IF EXISTS movies_users CASCADE;
+DROP TABLE IF EXISTS users_similarity CASCADE;
 DROP FUNCTION IF EXISTS insert_rating() CASCADE;
 DROP TRIGGER IF EXISTS create_rating_row on users CASCADE;
 
@@ -54,6 +55,13 @@ CREATE TABLE movies_users(
 	userID BIGINT REFERENCES users(id),
 	liked BOOLEAN,
 	PRIMARY KEY (movieID, userID)
+);
+
+-- user similarity
+CREATE TABLE users_similarity(
+	user1ID BIGINT REFERENCES users(id),
+	user2ID BIGINT REFERENCES users(id),
+	PRIMARY KEY (user1ID, user2ID)
 );
 
 -- predictions
