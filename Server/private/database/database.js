@@ -200,4 +200,19 @@
         });
     };
 
+    // Function to update best atributes
+    exports.updateBestAtributes = function(user) {
+        return new Promise(function(resolve, reject) {
+            client.query('UPDATE bestAtributes SET actors = $1 ,directors = $2, genre = $3, idleTime = $4, rated = $5, runtime = $6, talktime = $7, \
+                    writers = $8, year = $9, imdbrating = $10 WHERE userid = $11', user, function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
 }());

@@ -79,13 +79,13 @@ CREATE TABLE bestAtributes(
 	actors VARCHAR(255) NOT NULL,
 	directors VARCHAR(255) NOT NULL,
 	genre VARCHAR(255) NOT NULL,
-	idleTime SMALLINT NOT NULL,
+	idleTime DECIMAL NOT NULL,
 	rated VARCHAR(10) NOT NULL,
-	runtime SMALLINT NOT NULL,
-	talktime SMALLINT NOT NULL,
+	runtime DECIMAL NOT NULL,
+	talktime DECIMAL NOT NULL,
 	writers VARCHAR(500) NOT NULL,
 	year VARCHAR(10) NOT NULL,
-	imdbrating DECIMAL NOT NULL,
+	imdbrating DECIMAL NOT NULL
 );
 
 -- Function
@@ -95,6 +95,7 @@ CREATE FUNCTION insert_rating() RETURNS Trigger as $create_rating_row$
 	BEGIN
 		select currval(pg_get_serial_sequence('users','id')) INTO _temp;
 		INSERT INTO ratingfunction (userid,actors,directors, genre, idleTime, rated, runtime, talktime, writers, year, imdbrating) VALUES (_temp,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1);
+		INSERT INTO bestAtributes (userid,actors,directors, genre, idleTime, rated, runtime, talktime, writers, year, imdbrating) VALUES (_temp,0,0,0,0,0,0,0,0,0,0);
 		RETURN NULL;
 	END;
 $create_rating_row$ LANGUAGE plpgsql;	
@@ -105,7 +106,7 @@ CREATE TRIGGER create_rating_row AFTER INSERT ON users
 	EXECUTE PROCEDURE insert_rating();
 
 -- Para teste
-
+/*
 insert into predictions values('1','3','7');
 insert into predictions values('2','3','1');
 insert into predictions values('3','3','3');
@@ -129,3 +130,4 @@ insert into predictions values('8','1','9');
 insert into predictions values('9','1','8');
 insert into predictions values('10','1','6');
 insert into predictions values('11','1','10');
+	*/

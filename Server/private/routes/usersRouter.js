@@ -420,8 +420,6 @@
                         runtime[_movie.liked & 1].push(_movie.runtime);
                     });
 
-
-                    console.log(functionParameters);
                     var importance = {
                         'actors': similarity(actors),
                         'directors': similarity(directors),
@@ -432,11 +430,20 @@
                         'runtime': time_similarity(runtime),
                         'idleTime': time_similarity(idleTime),
                         'talktime': time_similarity(talktime),
-                        'imdbrating': { 'importance': 0.1 } // Need one way of checking
+                        'imdbrating': { 'importance': 0.1, 'pref_param': '9' } // Need one way of checking
                     };
 
-                    console.log(importance);
-                    resolve(importance);
+                    database.updateBestAtributes([importance.actors.pref_param, importance.directors.pref_param,
+                            importance.genre.pref_param, importance.idleTime.pref_param, importance.rated.pref_param,
+                            importance.runtime.pref_param, importance.talktime.pref_param, importance.writers.pref_param,
+                            importance.decades.pref_param, importance.imdbrating.pref_param, id
+                        ])
+                        .then(function(result) {
+                            resolve(importance);
+                        })
+                        .catch(function(err) {
+                            reject(err);
+                        });
                 })
                 .catch(function(err) {
                     console.log(err);
@@ -558,9 +565,13 @@
             negativeTime += value;
         });
 
+        if (positive_reviews.length === 0 || negative_reviews.length === 0) {
+            return { 'importance': 0, 'pref_param': -1 };
+        }
+
         var importance = Math.sqrt(Math.pow(positiveTime / positive_reviews.length - negativeTime / negative_reviews.length, 2));
 
-        return { 'importance': 1 / Math.exp(1 - 1 / Math.pow(importance, 2)) };
+        return { 'importance': 1 / Math.exp(1 - 1 / Math.pow(importance, 2)), 'pref_param': positiveTime / positive_reviews.length };
     }
 
     //Function that calculates similarity between users and return the most similar
