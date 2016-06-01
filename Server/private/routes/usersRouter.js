@@ -245,7 +245,26 @@
 
                                                         database.updateAllMovies(arrayUpdate, _info.id)
                                                             .then(function(_res) {
-                                                                res.status(200).send('OK');
+
+                                                                var ar_toUpdate = [];
+                                                                // TODO: Panic. Change
+                                                                for (var ratefun in importance[1]) {
+                                                                    if (ratefun != 'id' && ratefun != 'userid') {
+                                                                        console.log(ratefun);
+                                                                        ar_toUpdate.push(importance[1][ratefun]);
+                                                                    }
+                                                                }
+
+                                                                ar_toUpdate.push(_info.id);
+
+                                                                console.log(ar_toUpdate);
+                                                                database.updateRatingFunction(ar_toUpdate)
+                                                                    .then(function(_) {
+                                                                        res.status(200).send('OK');
+                                                                    })
+                                                                    .catch(function(err) {
+                                                                        res.status(406).send(err);
+                                                                    });
                                                             })
                                                             .catch(function(err) {
                                                                 res.status(406).send(err);

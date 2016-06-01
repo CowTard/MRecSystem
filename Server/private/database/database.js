@@ -200,6 +200,20 @@
         });
     };
 
+    // Function to update rating function
+    exports.updateRatingFunction = function(data) {
+        return new Promise(function(resolve, reject) {
+            client.query('UPDATE ratingfunction set actors = $1, directors = $2, genre = $3, idletime = $4, rated = $5, runtime = $6, talktime = $7, writers = $8, year = $9, imdbrating = $10 WHERE userid = $11', data, function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
     // Function to retrieve rating function
     exports.getRatedMoviesForUser = function(userID) {
         return new Promise(function(resolve, reject) {

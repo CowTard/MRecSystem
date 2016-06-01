@@ -69,7 +69,7 @@ CREATE TABLE users_similarity(
 CREATE TABLE predictions(
 	movieID BIGINT REFERENCES movies(id),
 	userID BIGINT REFERENCES users(id),
-	rating SMALLINT NOT NULL,
+	rating DECIMAL NOT NULL,
 	PRIMARY KEY(movieID,userID)
 );
 
