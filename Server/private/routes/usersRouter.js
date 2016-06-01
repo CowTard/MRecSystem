@@ -442,7 +442,6 @@
                         ])
                         .then(function(result) {
 
-
                             var _ac = importance.actors.sorted,
                                 _dir = importance.directors.sorted,
                                 _gen = importance.genre.sorted,
@@ -454,21 +453,22 @@
                                 _talktime = importance.talktime.sorted,
                                 _imdbrating = importance.imdbrating.sorted;
 
-                            importance.actors = importance.actors.importance * functionParameters.actors;
-                            importance.directors = importance.directors.importance * functionParameters.directors;
-                            importance.genre = importance.genre.importance * functionParameters.genre;
-                            importance.rated = importance.rated.importance * functionParameters.rated;
-                            importance.writers = importance.writers.importance * functionParameters.writers;
-                            importance.decades = importance.decades.importance * functionParameters.year;
-                            importance.runtime = importance.runtime.importance * functionParameters.runtime;
-                            importance.idleTime = importance.idleTime.importance * functionParameters.idletime;
-                            importance.talktime = importance.talktime.importance * functionParameters.talktime;
-                            importance.imdbrating = importance.imdbrating.importance * functionParameters.imdbrating;
+                            importance.actors = importance.actors.importance * functionParameters[0].actors;
+                            importance.directors = importance.directors.importance * functionParameters[0].directors;
+                            importance.genre = importance.genre.importance * functionParameters[0].genre;
+                            importance.rated = importance.rated.importance * functionParameters[0].rated;
+                            importance.writers = importance.writers.importance * functionParameters[0].writers;
+                            importance.decades = importance.decades.importance * functionParameters[0].year;
+                            importance.runtime = importance.runtime.importance * functionParameters[0].runtime;
+                            importance.idleTime = importance.idleTime.importance * functionParameters[0].idletime;
+                            importance.talktime = importance.talktime.importance * functionParameters[0].talktime;
+                            importance.imdbrating = importance.imdbrating.importance * functionParameters[0].imdbrating;
 
 
                             resolve([importance, _ac, _dir, _gen, _rated, _writers, _decades, _runtime, _idleTime, _talktime, _imdbrating]);
                         })
                         .catch(function(err) {
+                            console.log(err);
                             reject(err);
                         });
                 })
