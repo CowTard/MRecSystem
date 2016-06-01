@@ -1,0 +1,37 @@
+<div ng-include="'app/views/shared/header.ejs'"></div>
+
+<div class="alert alert-danger" role="alert" ng-if="user_Message">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Error:</span>
+        {{ user_Message }}
+</div>
+
+<div class="container" ng-controller="SearchController" data-ng-init="searchMovieEnd()">
+	<h3 class="text-center"> Search Results</h3>
+	<table class="table table-condensed">
+	  <thead>
+	  	<tr>
+	  	<th>Title</th>
+	  	<th>Actors</th>
+	  	<th>Directors</th>
+	  	<th>Genre</th>
+	  	<th>Rated</th>
+	  	<th>Year</th>
+	  	<th>Imdb Rating</th>
+	  	<th>Do you like this movie?</th>
+	  	</tr>
+	  </thead>
+	  <tbody>
+	  	<tr ng-repeat="movie in searchedMovie">
+	  		<td>{{movie.title}}</td>
+	  		<td>{{movie.actors}}</td>
+	  		<td>{{movie.directors}}</td>
+	  		<td>{{movie.genre}}</td>
+	  		<td>{{movie.rated}}</td>
+	  		<td>{{movie.year}}</td>
+	  		<td>{{movie.imdbrating}}</td>
+	  		<td><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-up" ng-click="likedMovie(movie.id, false, true)"></button><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-down" ng-click="likedMovie(movie.id, false, false)"></button></td>
+	  	</tr>
+	  </tbody>
+	</table>
+</div>

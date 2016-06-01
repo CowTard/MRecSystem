@@ -95,6 +95,14 @@
                     });
             }
         };
+
+        // Scope function to go to search results
+        $scope.searchMovieInit = function(movieTitle) {
+
+            MainService.searchMovieInit(movieTitle);
+
+        };
+
     };
 
     // Injecting modules used for better minifing later on
