@@ -180,7 +180,7 @@
                     console.log(err);
                     reject(err);
                 } else {
-                    resolve(result.rows);
+                    resolve(result.rows[0]);
                 }
             });
         });

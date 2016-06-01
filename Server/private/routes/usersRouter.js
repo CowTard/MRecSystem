@@ -439,6 +439,16 @@
                             importance.decades.pref_param, importance.imdbrating.pref_param, id
                         ])
                         .then(function(result) {
+                            importance.actors = importance.actors.importance * functionParameters.actors;
+                            importance.directors = importance.directors.importance * functionParameters.directors;
+                            importance.genre = importance.genre.importance * functionParameters.genre;
+                            importance.rated = importance.rated.importance * functionParameters.rated;
+                            importance.writers = importance.writers.importance * functionParameters.writers;
+                            importance.decades = importance.decades.importance * functionParameters.year;
+                            importance.runtime = importance.runtime.importance * functionParameters.runtime;
+                            importance.idleTime = importance.idleTime.importance * functionParameters.idletime;
+                            importance.talktime = importance.talktime.importance * functionParameters.talktime;
+                            importance.imdbrating = importance.imdbrating.importance * functionParameters.imdbrating;
                             resolve(importance);
                         })
                         .catch(function(err) {
