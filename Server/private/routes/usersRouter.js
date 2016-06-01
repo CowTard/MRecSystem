@@ -103,7 +103,7 @@
                             database.getReviewedMovies([_info.id])
                                 .then(function(_result) {
 
-                                    analizeLikedMovies(_result)
+                                    analizeLikedMovies(_result, _info.id)
                                         .then(function() {
                                             res.status(200).send('OK');
                                         })
@@ -117,6 +117,7 @@
                                 });
                         })
                         .catch(function(err) {
+                            console.log(err);
                             res.status(406).send(err);
                         });
                 })
@@ -195,15 +196,20 @@
 
             database.getReviewedMovies([1])
                 .then(function(result) {
-                    analizeLikedMovies(result, 1)
-                        .then(function(importance) {
 
-                            res.status(200).send(importance);
-                        })
-                        .catch(function(err) {
-                            console.log(err);
-                            res.status(406).send(err);
-                        });
+                    if (result.length > 0) {
+                        analizeLikedMovies(result, 1)
+                            .then(function(importance) {
+
+                                res.status(200).send(importance);
+                            })
+                            .catch(function(err) {
+                                console.log(err);
+                                res.status(406).send(err);
+                            });
+                    } else {
+                        res.status(406).send('Not a single thing to evaluate');
+                    }
                 })
                 .catch(function(_err) {
 
