@@ -6,7 +6,7 @@
         {{ user_Message }}
 </div>
 
-<div class="container" data-ng-init="getBestRatedMovies()">
+<div class="container" ng-controller="MainController" data-ng-init="getBestRatedMovies()">
 	<h3 class="text-center"> Recommended Movies</h3>
 	<table class="table table-condensed">
 	  <thead>
@@ -19,6 +19,7 @@
 	  	<th>Year</th>
 	  	<th>Imdb Rating</th>
 	  	<th>Why it's recommended for you</th>
+	  	<th>Do you like this movie?</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
@@ -30,6 +31,8 @@
 	  		<td>{{movie.rated}}</td>
 	  		<td>{{movie.year}}</td>
 	  		<td>{{movie.imdbrating}}</td>
+	  		<td></td>
+	  		<td><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-up" ng-click="likedMovie(movie.id, false, true)"></button><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-down" ng-click="likedMovie(movie.id, false, false)"></button></td>
 	  	</tr>
 	  </tbody>
 	</table>
