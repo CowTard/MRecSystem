@@ -126,6 +126,39 @@
                 });
         });
 
+        // Route responsible to handle the movie likes
+        server.get('/api/updatePredictions', function(req, res) {
+
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(loggedUser) {
+                    var movies = [{
+                        id: 1,
+                        rating: 8
+                    }, {
+                        id: 2,
+                        rating: 0
+                    }, {
+                        id: 3,
+                        rating: 5
+                    }];
+                    //mudar para post e ter realmente os filmes aqui 
+                    database.updateAllMovies(movies, loggedUser.id)
+                        .then(function(result) {
+                            console.log("eheh");
+                            res.status(200).send(result);
+                        })
+                        .catch(function(err) {
+                            res.status(406).send(err);
+                        });
+                })
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not reference this like to your account.');
+                });
+        });
+
         // Route that returns all reviewd movies from the requester
         server.get('/api/movies/reviewed', function(req, res) {
 

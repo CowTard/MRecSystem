@@ -215,4 +215,20 @@
         });
     };
 
+    exports.updateAllMovies = function(movies, userid) {
+        return new Promise(function(resolve, reject) {
+            movies.forEach(function(movie) {
+                client.query('UPDATE predictions set rating = $1 where userid = $2 and movieid = $3', [movie.rating, userid, movie.id], function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        resolve(result.rows);
+                    }
+                });
+            });
+
+        });
+    };
+
 }());
