@@ -21,6 +21,11 @@
 
         };
 
+
+        $scope.reloadPage = function() {
+            SearchService.reloadPage();
+        }
+
     };
 
     // Injecting modules used for better minifing later on

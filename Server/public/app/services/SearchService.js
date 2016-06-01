@@ -18,6 +18,11 @@
                     deferred.reject(err);
                 });
         };
+
+        this.reloadPage = function() {
+            $window.location.reload();
+        };
+
     };
 
     // Injecting modules used for better minifing later on
