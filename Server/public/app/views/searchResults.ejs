@@ -30,8 +30,12 @@
 	  		<td>{{movie.rated}}</td>
 	  		<td>{{movie.year}}</td>
 	  		<td>{{movie.imdbrating}}</td>
-	  		<td><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-up" ng-click="likedMovie(movie.id, false, true)"></button><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-down" ng-click="likedMovie(movie.id, false, false)"></button></td>
+	  		<td ng-if="!movie.liked"><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-up" ng-click="likedMovie(movie.id, false, true); reloadPage()"></button><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-down" ng-click="likedMovie(movie.id, false, false); reloadPage()"></button></td>
+	  		<td ng-if="movie.liked">Already liked</td>
 	  	</tr>
 	  </tbody>
 	</table>
 </div>
+<!--
+likedMovie(movie.id, false, true)
+likedMovie(movie.id, false, false);-->

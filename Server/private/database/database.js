@@ -243,9 +243,12 @@
         });
     };
 
-    exports.searchMovie = function(movieTitle) {
+    exports.searchMovie = function(userid, movieTitle) {
         return new Promise(function(resolve, reject) {
-            client.query('select * from movies where title like $1', ['%' + movieTitle + '%'], function(err, result) {
+            client.query('select movies.*, movies_users.liked , movies_users.userid is not null as liked \
+                            from movies LEFT JOIN movies_users \
+                            ON movies_users.movieid = movies.id and movies_users.userid = $1 where movies.title like $2\
+                            ORDER BY movies.id;', [userid, '%' + movieTitle + '%'], function(err, result) {
                 if (err) {
                     console.log(err);
                     reject(err);

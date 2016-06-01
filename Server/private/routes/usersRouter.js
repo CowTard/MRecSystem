@@ -382,12 +382,21 @@
         server.post('/api/search', function(req, res) {
 
             var movieTitle = req.body.title;
-            database.searchMovie([movieTitle])
-                .then(function(result) {
-                    res.status(200).send(result);
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(_info) {
+                    database.searchMovie(_info.id, [movieTitle])
+                        .then(function(result) {
+                            res.status(200).send(result);
+                        })
+                        .catch(function(err) {
+                            console.log(err);
+                            res.status(406).send('Email is not valid. We could not resolve your request.');
+                        });
                 })
                 .catch(function(err) {
-                    console.log(err);
                     res.status(406).send('Email is not valid. We could not resolve your request.');
                 });
 
