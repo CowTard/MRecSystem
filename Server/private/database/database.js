@@ -243,4 +243,18 @@
         });
     };
 
+    exports.searchMovie = function(movieTitle) {
+        return new Promise(function(resolve, reject) {
+            client.query('select * from movies where title like $1', ['%' + movieTitle + '%'], function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
+
 }());

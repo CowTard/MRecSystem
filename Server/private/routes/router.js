@@ -48,6 +48,11 @@
                 });
         });
 
+        // Route to show parser input
+        server.get('/search_results/:title', function(req, res) {
+            res.render('index');
+        });
+
         // Routes about users
         require('./usersRouter')(server);
     };

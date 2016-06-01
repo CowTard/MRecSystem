@@ -25,6 +25,10 @@
                 controller: 'MainController',
                 templateUrl: 'app/views/parser.ejs'
             })
+            .when('/search_results/:title', {
+                controller: 'MainController',
+                templateUrl: 'app/views/searchResults.ejs'
+            })
             .otherwise({
                 redirectTo: '/'
             });

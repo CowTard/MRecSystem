@@ -90,6 +90,11 @@
                     deferred.reject(err);
                 });
         };
+
+        // Scope function to search movie
+        this.searchMovieInit = function(movieTitle) {
+            $window.location = '/search_results/' + movieTitle;
+        };
     };
 
     // Injecting modules used for better minifing later on
