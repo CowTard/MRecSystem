@@ -98,18 +98,63 @@
 
                     // Add it to database
                     database.insertReview([_info.id, movieID, review])
-                        .then(function(result) {
+                        .then(function(_temp) {
 
                             database.getReviewedMovies([_info.id])
-                                .then(function(_result) {
+                                .then(function(result) {
+                                    if (result.length > 0) {
+                                        analizeLikedMovies(result, 1)
+                                            .then(function(importance) {
 
-                                    analizeLikedMovies(_result, _info.id)
-                                        .then(function() {
-                                            res.status(200).send('OK');
-                                        })
-                                        .catch(function(_err) {
-                                            res.status(406).send('We could not resolve your request.');
-                                        });
+                                                var number_of_atributes_increase_every_time = 4;
+
+                                                var newFunction = calculateImportantAtt(importance[0], number_of_atributes_increase_every_time);
+
+                                                // Add importance
+
+                                                var sortable = [];
+                                                for (var att in newFunction)
+                                                    sortable.push([att, newFunction[att]]);
+
+                                                sortable = sortable.sort(function(a, b) {
+                                                    return a[1] - b[1];
+                                                });
+
+                                                var trade_attr_index = 0;
+                                                for (var i = sortable.length - 1; i > 10 - number_of_atributes_increase_every_time; i--, trade_attr_index++) {
+
+                                                    if (sortable[i][0] == 'decades')
+                                                        sortable[i][0] = 'year';
+
+                                                    if (sortable[trade_attr_index][0] == 'decades')
+                                                        sortable[trade_attr_index][0] = 'year';
+
+                                                    if (importance[1][sortable[trade_attr_index][0]] - sortable[i][1] >= 0) {
+
+                                                        importance[1][sortable[i][0]] = parseFloat(importance[1][sortable[i][0]]) + sortable[i][1];
+                                                        importance[1][sortable[trade_attr_index][0]] -= sortable[i][1];
+
+                                                        importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
+                                                        importance[1][sortable[trade_attr_index][0]] = importance[1][sortable[trade_attr_index][0]].toString();
+                                                    } else {
+                                                        importance[1][sortable[i][0]] += parseFloat(importance[1][sortable[trade_attr_index][0]]) - sortable[i][1];
+                                                        importance[1][sortable[trade_attr_index][0]] = '0';
+
+                                                        importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
+                                                    }
+                                                }
+
+                                                res.status(200).send(importance[1]);
+
+                                            })
+                                            .catch(function(err) {
+                                                console.log(err);
+                                                res.status(406).send(err);
+                                            });
+                                    } else {
+                                        res.status(406).send('Not a single thing to evaluate');
+                                    }
+
                                 })
                                 .catch(function(err) {
                                     console.log(err);
@@ -201,7 +246,46 @@
                         analizeLikedMovies(result, 1)
                             .then(function(importance) {
 
-                                res.status(200).send(importance);
+                                var number_of_atributes_increase_every_time = 4;
+
+                                var newFunction = calculateImportantAtt(importance[0], number_of_atributes_increase_every_time);
+
+                                // Add importance
+
+                                var sortable = [];
+                                for (var att in newFunction)
+                                    sortable.push([att, newFunction[att]]);
+
+                                sortable = sortable.sort(function(a, b) {
+                                    return a[1] - b[1];
+                                });
+
+                                var trade_attr_index = 0;
+                                for (var i = sortable.length - 1; i > 10 - number_of_atributes_increase_every_time; i--, trade_attr_index++) {
+
+                                    if (sortable[i][0] == 'decades')
+                                        sortable[i][0] = 'year';
+
+                                    if (sortable[trade_attr_index][0] == 'decades')
+                                        sortable[trade_attr_index][0] = 'year';
+
+                                    if (importance[1][sortable[trade_attr_index][0]] - sortable[i][1] >= 0) {
+
+                                        importance[1][sortable[i][0]] = parseFloat(importance[1][sortable[i][0]]) + sortable[i][1];
+                                        importance[1][sortable[trade_attr_index][0]] -= sortable[i][1];
+
+                                        importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
+                                        importance[1][sortable[trade_attr_index][0]] = importance[1][sortable[trade_attr_index][0]].toString();
+                                    } else {
+                                        importance[1][sortable[i][0]] += parseFloat(importance[1][sortable[trade_attr_index][0]]) - sortable[i][1];
+                                        importance[1][sortable[trade_attr_index][0]] = '0';
+
+                                        importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
+                                    }
+                                }
+
+
+                                res.status(200).send(importance[1]);
                             })
                             .catch(function(err) {
                                 console.log(err);
@@ -470,8 +554,7 @@
                             importance.talktime = importance.talktime.importance * functionParameters[0].talktime;
                             importance.imdbrating = importance.imdbrating.importance * functionParameters[0].imdbrating;
 
-
-                            resolve([importance, _ac, _dir, _gen, _rated, _writers, _decades, _runtime, _idleTime, _talktime, _imdbrating]);
+                            resolve([importance, functionParameters[0], _ac, _dir, _gen, _rated, _writers, _decades, _runtime, _idleTime, _talktime, _imdbrating]);
                         })
                         .catch(function(err) {
                             console.log(err);
@@ -495,9 +578,7 @@
             changeable_a_data_0 = a_data[0],
             changeable_a_data_1 = a_data[1],
             positive_reps = {},
-            negative_reps = {},
-            balance = positive_reps;
-
+            negative_reps = {};
 
         // Get number of repetitions in liked content
         for (var i = 0; i < changeable_a_data_1.length; i++) {
@@ -517,13 +598,16 @@
             }
         }
 
+
+        var balance = positive_reps;
+
         // Get number of repetitions in disliked content
         for (var t = 0; t < changeable_a_data_0.length; t++) {
 
             if (negative_reps.hasOwnProperty(changeable_a_data_0[t])) {
                 continue;
             } else {
-                negative_reps[changeable_a_data_0[t]] = 1;
+                negative_reps[changeable_a_data_0[t]] = 0;
 
                 unique_entries += 1;
 
@@ -553,7 +637,6 @@
             number_of_keys = 0,
             sumRepetions = 0;
 
-
         for (key in balance) {
 
             if (balance.hasOwnProperty(key)) {
@@ -578,6 +661,21 @@
         var importance = Math.sqrt((most_liked_param_number_of_rep - mediamRepetions) * numberOfRepetitions / number_of_keys);
 
         return { 'pref_param': most_liked_param, 'importance': importance, 'sorted': balance };
+    }
+
+    // Function to retrieve a new function
+    function calculateImportantAtt(importance, numberToChange) {
+        if (numberToChange > 1 + importance.length / 2) {
+            throw 'YOU CANT DO THIS.';
+        } else {
+
+            var array_imp = {};
+            for (var key in importance) {
+                array_imp[key] = importance[key];
+            }
+
+            return array_imp;
+        }
     }
 
     // Function to calculate similarity between times
