@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS movies CASCADE;
 DROP TABLE IF EXISTS predictions CASCADE;
 DROP TABLE IF EXISTS movies_users CASCADE;
 DROP TABLE IF EXISTS users_similarity CASCADE;
+DROP TABLE IF EXISTS bestAtributes CASCADE;
 DROP FUNCTION IF EXISTS insert_rating() CASCADE;
 DROP TRIGGER IF EXISTS create_rating_row on users CASCADE;
 
@@ -70,6 +71,21 @@ CREATE TABLE predictions(
 	userID BIGINT REFERENCES users(id),
 	rating SMALLINT NOT NULL,
 	PRIMARY KEY(movieID,userID)
+);
+
+-- Best attributes 
+CREATE TABLE bestAtributes(
+	userID BIGINT REFERENCES users(id),
+	actors VARCHAR(255) NOT NULL,
+	directors VARCHAR(255) NOT NULL,
+	genre VARCHAR(255) NOT NULL,
+	idleTime SMALLINT NOT NULL,
+	rated VARCHAR(10) NOT NULL,
+	runtime SMALLINT NOT NULL,
+	talktime SMALLINT NOT NULL,
+	writers VARCHAR(500) NOT NULL,
+	year VARCHAR(10) NOT NULL,
+	imdbrating DECIMAL NOT NULL,
 );
 
 -- Function

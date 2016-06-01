@@ -152,8 +152,8 @@
             database.getReviewedMovies([1])
                 .then(function(result) {
                     analizeLikedMovies(result, 1)
-                        .then(function() {
-                            res.status(200).send(result);
+                        .then(function(importance) {
+                            res.status(200).send(importance);
                         })
                         .catch(function(err) {
                             console.log(err);
@@ -376,6 +376,8 @@
                         runtime[_movie.liked & 1].push(_movie.runtime);
                     });
 
+
+                    console.log(functionParameters);
                     var importance = {
                         'actors': similarity(actors),
                         'directors': similarity(directors),
@@ -383,10 +385,14 @@
                         'rated': similarity(rated),
                         'writers': similarity(writers),
                         'decades': similarity(decades),
+                        'runtime': time_similarity(runtime),
+                        'idleTime': time_similarity(idleTime),
+                        'talktime': time_similarity(talktime),
+                        'imdbrating': { 'importance': 0.1 } // Need one way of checking
                     };
 
                     console.log(importance);
-                    resolve();
+                    resolve(importance);
                 })
                 .catch(function(err) {
                     console.log(err);
@@ -484,12 +490,6 @@
 
         var mediamRepetions = Math.abs(sumRepetions / number_of_keys);
 
-        //console.log('Balance:', balance);
-        //console.log('Pref: ', most_liked_param);
-
-
-        //console.log('[' + most_liked_param + ', ' + most_liked_param_number_of_rep + ', ' + numberOfRepetitions + ', ' + number_of_keys + ']');
-
         // Return: Bigger repetitions and more repetitions => more importance
 
         var importance = Math.sqrt((most_liked_param_number_of_rep - mediamRepetions) * numberOfRepetitions / number_of_keys);
@@ -500,7 +500,23 @@
 
     // Function to calculate similarity between times
     function time_similarity(a_data) {
-        console.log(a_data);
+
+        var positive_reviews = a_data[1],
+            negative_reviews = a_data[0];
+
+        var positiveTime = 0;
+        positive_reviews.forEach(function(value) {
+            positiveTime += value;
+        });
+
+        var negativeTime = 0;
+        negative_reviews.forEach(function(value) {
+            negativeTime += value;
+        });
+
+        var importance = Math.sqrt(Math.pow(positiveTime / positive_reviews.length - negativeTime / negative_reviews.length, 2));
+
+        return { 'importance': 1 / Math.exp(1 - 1 / Math.pow(importance, 2)) };
     }
 
     //Function that calculates similarity between users and return the most similar
@@ -526,7 +542,7 @@
                         var diffImdbrating = Math.abs(functionLoggedUser[0].imdbrating - functionsToCompare[i].imdbrating);
 
                         var variation = diffActors + diffDirectors + diffGenre + diffIdletime + diffRated + diffRuntime + diffTalktime + diffWriters + diffYear + diffImdbrating;
-                        if (bestVariation == null || variation < bestVariation) {
+                        if (bestVariation === null || variation < bestVariation) {
                             bestVariation = variation;
                             mostSimilarUserID = functionsToCompare[i].userid;
                         }
@@ -565,14 +581,14 @@
     }
 
     function getTheHighestOcurrence(array) {
-        if (array.length == 0)
+        if (array.length === 0)
             return null;
         var modeMap = {};
         var maxEl = array[0],
             maxCount = 1;
         for (var i = 0; i < array.length; i++) {
             var el = array[i];
-            if (modeMap[el] == null)
+            if (modeMap[el] === null)
                 modeMap[el] = 1;
             else
                 modeMap[el]++;
@@ -581,7 +597,7 @@
                 maxCount = modeMap[el];
             }
         }
-        return maxEl;;
+        return maxEl;
     }
 
 }());
