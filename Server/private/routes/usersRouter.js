@@ -131,25 +131,128 @@
 
                                                     if (importance[1][sortable[trade_attr_index][0]] - sortable[i][1] >= 0) {
 
-                                                        importance[1][sortable[i][0]] = parseFloat(importance[1][sortable[i][0]]) + sortable[i][1];
-                                                        importance[1][sortable[trade_attr_index][0]] -= sortable[i][1];
+                                                        importance[1][sortable[i][0]] = parseFloat(importance[1][sortable[i][0]]) + parseFloat(sortable[i][1]);
+                                                        importance[1][sortable[trade_attr_index][0]] = parseFloat(importance[1][sortable[trade_attr_index][0]]) - parseFloat(sortable[i][1]);
 
                                                         importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
                                                         importance[1][sortable[trade_attr_index][0]] = importance[1][sortable[trade_attr_index][0]].toString();
                                                     } else {
-                                                        importance[1][sortable[i][0]] += parseFloat(importance[1][sortable[trade_attr_index][0]]) - sortable[i][1];
+                                                        importance[1][sortable[i][0]] = parseFloat(importance[1][sortable[i][0]]) + parseFloat(importance[1][sortable[trade_attr_index][0]]) - parseFloat(sortable[i][1]);
                                                         importance[1][sortable[trade_attr_index][0]] = '0';
 
                                                         importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
                                                     }
                                                 }
 
+                                                console.log(importance[1]);
                                                 database.getMovies()
                                                     .then(function(result) {
-                                                        console.log(result);
-                                                        res.status(200).send('OK');
+
+                                                        var arrayUpdate = [];
+
+                                                        result.forEach(function(mov) {
+
+                                                            var bonus = false,
+                                                                rating = 0;
+
+                                                            // , [0], _ac, _dir, _gen, _rated, _writers, _decades, _runtime, _idleTime, _talktime, _imdbrating]
+                                                            // Actors 
+
+                                                            var result = checkingAtributeOnLikedArray(mov.actors, importance[2]);
+
+                                                            rating += parseFloat(importance[1].actors) * result[0];
+                                                            bonus = bonus || result[1];
+
+                                                            //console.log('Actors: ', parseFloat(importance[1].actors) * result[0] * 10);
+
+                                                            // Directors 
+
+                                                            result = checkingAtributeOnLikedArray(mov.directors, importance[3]);
+
+                                                            rating += parseFloat(importance[1].directors) * result[0];
+                                                            bonus = bonus || result[1];
+
+                                                            //console.log('Directors: ', parseFloat(importance[1].directors) * result[0] * 10);
+
+                                                            // Genres 
+
+                                                            result = checkingAtributeOnLikedArray(mov.genre, importance[4]);
+
+                                                            rating += parseFloat(importance[1].genre) * result[0];
+                                                            bonus = bonus || result[1];
+
+                                                            //console.log('Genres: ', parseFloat(importance[1].genre) * result[0] * 10);
+
+                                                            // Rated 
+
+                                                            result = checkingAtributeOnLikedArray(mov.rated, importance[5]);
+
+                                                            rating += parseFloat(importance[1].rated) * result[0];
+                                                            bonus = bonus || result[1];
+
+                                                            //console.log('Rate: ', parseFloat(importance[1].rated) * result[0] * 10);
+
+                                                            // Writers 
+
+                                                            result = checkingAtributeOnLikedArray(mov.writers, importance[6]);
+
+                                                            rating += parseFloat(importance[1].writers) * result[0];
+                                                            bonus = bonus || result[1];
+
+                                                            //console.log('Writers: ', parseFloat(importance[1].writers) * result[0] * 10);
+
+                                                            // Decades 
+
+                                                            result = checkingAtributeOnLikedArray(mov.year, importance[7]);
+
+                                                            rating += parseFloat(importance[1].year) * result[0];
+                                                            bonus = bonus || result[1];
+
+                                                            //console.log('Decades: ', parseFloat(importance[1].year) * result[0] * 10);
+
+                                                            // Run Time 
+
+                                                            if (importance[8][0].length === 0 || importance[8][1].length === 0)
+                                                                result = 1;
+                                                            else
+                                                                result = checkingTimeSimilarity(mov.runtime, importance[8]);
+
+                                                            rating += parseFloat(importance[1].runtime) * result;
+
+                                                            //console.log('Run time: ', parseFloat(importance[1].runtime) * result * 10);
+
+                                                            // idle Time 
+                                                            if (importance[9][0].length === 0 || importance[9][1].length === 0)
+                                                                result = 1;
+                                                            else
+                                                                result = checkingTimeSimilarity(mov.idletime, importance[9]);
+
+                                                            rating += parseFloat(importance[1].idletime) * result;
+
+                                                            //console.log('Idle time: ', parseFloat(importance[1].idletime) * result * 10);
+
+                                                            // talk Time 
+                                                            if (importance[10][0].length === 0 || importance[10][1].length === 0)
+                                                                result = 1;
+                                                            else
+                                                                result = checkingTimeSimilarity(mov.talktime, importance[10]);
+
+                                                            rating += parseFloat(importance[1].talktime) * result;
+
+                                                            //console.log('Talk time: ', parseFloat(importance[1].talktime) * result * 10);
+                                                            arrayUpdate.push({ 'rating': rating * 10, 'id': mov.id });
+                                                        });
+
+                                                        database.updateAllMovies(arrayUpdate, _info.id)
+                                                            .then(function(_res) {
+                                                                res.status(200).send('OK');
+                                                            })
+                                                            .catch(function(err) {
+                                                                res.status(406).send(err);
+                                                            });
                                                     })
                                                     .catch(function(err) {
+                                                        console.log(err);
                                                         res.status(406).send('We could not resolve your request.');
                                                     });
 
@@ -439,7 +542,7 @@
             //  --> writers
             //      Like writers vs dislike writers | If there's repetition, improve. Contradition = ? 
             //
-            //  @returns [ Importence , Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, writers, year]
+            //  @returns [ Importance , Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, writers, year]
             //
 
             // Get liked and disliked actors
@@ -818,6 +921,48 @@
             }
         }
         return maxEl;
+    }
+
+
+    // Function to check if a user is on preferable one
+    function checkingAtributeOnLikedArray(movieParam, userParam) {
+
+        var Num_param = 1;
+        var movieParams = movieParam.split('- '),
+            bonus = false;
+
+        movieParams.forEach(function(param) {
+            if (userParam.hasOwnProperty(param) && userParam[param] > 0) {
+                if (userParam[param] > 5) {
+                    bonus = true;
+                }
+
+                Num_param += 1;
+            }
+        });
+
+        return [Num_param / movieParams.length, bonus];
+    }
+
+    // Function to check time
+    function checkingTimeSimilarity(movieParam, userParam) {
+
+        var pos_median = 0;
+
+        userParam[1].forEach(function(value) {
+            pos_median += value;
+        });
+
+        pos_median = pos_median / userParam[1].length;
+
+        var result = 0;
+        if (movieParam <= pos_median)
+            result = Math.pow(movieParam, 2) / Math.pow(pos_median, 2);
+        else {
+            result = Math.pow(movieParam - 2, 2) / Math.pow(pos_median - 2, 2);
+        }
+
+        return result;
     }
 
 }());

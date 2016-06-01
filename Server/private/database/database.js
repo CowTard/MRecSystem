@@ -236,12 +236,10 @@
                     if (err) {
                         console.log(err);
                         reject(err);
-                    } else {
-                        resolve(result.rows);
                     }
                 });
             });
-
+            resolve();
         });
     };
 
