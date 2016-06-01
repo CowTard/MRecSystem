@@ -197,6 +197,7 @@
                 .then(function(result) {
                     analizeLikedMovies(result, 1)
                         .then(function(importance) {
+
                             res.status(200).send(importance);
                         })
                         .catch(function(err) {
@@ -242,7 +243,6 @@
                 .catch(function(err) {
                     res.status(406).send('Email is not valid. We could not reference this like to your account.');
                 });
-
         });
 
         server.get('/testSimilarMovies', function(req, res) {
@@ -281,7 +281,6 @@
                 .catch(function(err) {
                     res.status(406).send('Email is not valid. We could not reference this like to your account.');
                 });
-
         });
 
     };
@@ -311,6 +310,9 @@
             //      Like decades vs dislike decades | If there's repetition, improve. Contradition = ?
             //  --> writers
             //      Like writers vs dislike writers | If there's repetition, improve. Contradition = ? 
+            //
+            //  @returns [ Importence , Actors, Directors, Genre, IdleTime, imdbRating, Rated, runtime, talktime, writers, year]
+            //
 
             // Get liked and disliked actors
 
@@ -430,7 +432,7 @@
                         'runtime': time_similarity(runtime),
                         'idleTime': time_similarity(idleTime),
                         'talktime': time_similarity(talktime),
-                        'imdbrating': { 'importance': 0.1, 'pref_param': '9' } // Need one way of checking
+                        'imdbrating': { 'importance': 0.1, 'pref_param': '9', 'sorted': imdbrating } // Need one way of checking
                     };
 
                     database.updateBestAtributes([importance.actors.pref_param, importance.directors.pref_param,
@@ -439,6 +441,19 @@
                             importance.decades.pref_param, importance.imdbrating.pref_param, id
                         ])
                         .then(function(result) {
+
+
+                            var _ac = importance.actors.sorted,
+                                _dir = importance.directors.sorted,
+                                _gen = importance.genre.sorted,
+                                _rated = importance.rated.sorted,
+                                _writers = importance.writers.sorted,
+                                _decades = importance.decades.sorted,
+                                _runtime = importance.runtime.sorted,
+                                _idleTime = importance.idleTime.sorted,
+                                _talktime = importance.talktime.sorted,
+                                _imdbrating = importance.imdbrating.sorted;
+
                             importance.actors = importance.actors.importance * functionParameters.actors;
                             importance.directors = importance.directors.importance * functionParameters.directors;
                             importance.genre = importance.genre.importance * functionParameters.genre;
@@ -449,7 +464,9 @@
                             importance.idleTime = importance.idleTime.importance * functionParameters.idletime;
                             importance.talktime = importance.talktime.importance * functionParameters.talktime;
                             importance.imdbrating = importance.imdbrating.importance * functionParameters.imdbrating;
-                            resolve(importance);
+
+
+                            resolve([importance, _ac, _dir, _gen, _rated, _writers, _decades, _runtime, _idleTime, _talktime, _imdbrating]);
                         })
                         .catch(function(err) {
                             reject(err);
@@ -552,11 +569,9 @@
         var mediamRepetions = Math.abs(sumRepetions / number_of_keys);
 
         // Return: Bigger repetitions and more repetitions => more importance
-
         var importance = Math.sqrt((most_liked_param_number_of_rep - mediamRepetions) * numberOfRepetitions / number_of_keys);
 
-        // Function sqrt (  x_times_favorito * (x_times_favorito - median Repetitions)^2   )
-        return { 'pref_param': most_liked_param, 'importance': importance };
+        return { 'pref_param': most_liked_param, 'importance': importance, 'sorted': balance };
     }
 
     // Function to calculate similarity between times
@@ -576,12 +591,12 @@
         });
 
         if (positive_reviews.length === 0 || negative_reviews.length === 0) {
-            return { 'importance': 0, 'pref_param': -1 };
+            return { 'importance': 0, 'pref_param': -1, 'sorted': a_data };
         }
 
         var importance = Math.sqrt(Math.pow(positiveTime / positive_reviews.length - negativeTime / negative_reviews.length, 2));
 
-        return { 'importance': 1 / Math.exp(1 - 1 / Math.pow(importance, 2)), 'pref_param': positiveTime / positive_reviews.length };
+        return { 'importance': 1 / Math.exp(1 - 1 / Math.pow(importance, 2)), 'pref_param': positiveTime / positive_reviews.length, 'sorted': a_data };
     }
 
     //Function that calculates similarity between users and return the most similar
@@ -619,7 +634,6 @@
                 });
 
         });
-
     }
 
     //Function that calculates similarity between users and return the most similar
@@ -642,7 +656,6 @@
             resolve(mostSimilarUserID);
 
         });
-
     }
 
     function getTheHighestOcurrence(array) {
