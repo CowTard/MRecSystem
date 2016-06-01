@@ -144,7 +144,14 @@
                                                     }
                                                 }
 
-                                                res.status(200).send(importance[1]);
+                                                database.getMovies()
+                                                    .then(function(result) {
+                                                        console.log(result);
+                                                        res.status(200).send('OK');
+                                                    })
+                                                    .catch(function(err) {
+                                                        res.status(406).send('We could not resolve your request.');
+                                                    });
 
                                             })
                                             .catch(function(err) {
@@ -154,7 +161,6 @@
                                     } else {
                                         res.status(406).send('Not a single thing to evaluate');
                                     }
-
                                 })
                                 .catch(function(err) {
                                     console.log(err);
@@ -163,6 +169,38 @@
                         })
                         .catch(function(err) {
                             console.log(err);
+                            res.status(406).send(err);
+                        });
+                })
+                .catch(function(err) {
+                    res.status(406).send('Email is not valid. We could not reference this like to your account.');
+                });
+        });
+
+        // Route responsible to handle the movie likes
+        server.get('/api/updatePredictions', function(req, res) {
+
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+
+            database.getSensitiveData([user])
+                .then(function(loggedUser) {
+                    var movies = [{
+                        id: 1,
+                        rating: 8
+                    }, {
+                        id: 2,
+                        rating: 0
+                    }, {
+                        id: 3,
+                        rating: 5
+                    }];
+                    //mudar para post e ter realmente os filmes aqui
+                    database.updateAllMovies(movies, loggedUser.id)
+                        .then(function(result) {
+                            res.status(200).send(result);
+                        })
+                        .catch(function(err) {
                             res.status(406).send(err);
                         });
                 })

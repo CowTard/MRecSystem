@@ -78,6 +78,20 @@
         });
     };
 
+    // Function to get all the data from a movie
+    exports.getMovies = function() {
+        return new Promise(function(resolve, reject) {
+            client.query('select * from movies ', function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
+
     // Function to get all the data from a movie by id
     exports.getAllMovies = function(userID) {
         return new Promise(function(resolve, reject) {
@@ -212,6 +226,22 @@
                     resolve(result.rows);
                 }
             });
+        });
+    };
+
+    exports.updateAllMovies = function(movies, userid) {
+        return new Promise(function(resolve, reject) {
+            movies.forEach(function(movie) {
+                client.query('UPDATE predictions set rating = $1 where userid = $2 and movieid = $3', [movie.rating, userid, movie.id], function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        resolve(result.rows);
+                    }
+                });
+            });
+
         });
     };
 

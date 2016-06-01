@@ -92,13 +92,19 @@ CREATE TABLE bestAtributes(
 CREATE FUNCTION insert_rating() RETURNS Trigger as $create_rating_row$
 	DECLARE
 		_temp numeric;
+		iterator float4 := 1;
 	BEGIN
 		select currval(pg_get_serial_sequence('users','id')) INTO _temp;
 		INSERT INTO ratingfunction (userid,actors,directors, genre, idleTime, rated, runtime, talktime, writers, year, imdbrating) VALUES (_temp,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1);
 		INSERT INTO bestAtributes (userid,actors,directors, genre, idleTime, rated, runtime, talktime, writers, year, imdbrating) VALUES (_temp,0,0,0,0,0,0,0,0,0,0);
+		WHILE iterator < 126
+	    LOOP
+	    	INSERT INTO predictions (movieID, userID, rating) VALUES (iterator,_temp,0);
+	    	iterator := iterator + 1;
+	    END LOOP;
 		RETURN NULL;
 	END;
-$create_rating_row$ LANGUAGE plpgsql;	
+$create_rating_row$ LANGUAGE plpgsql;
 
 -- Trigger
 CREATE TRIGGER create_rating_row AFTER INSERT ON users
