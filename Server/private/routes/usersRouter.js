@@ -104,7 +104,7 @@
                                 .then(function(_result) {
 
                                     analizeLikedMovies(_result, _info.id)
-                                        .then(function() {
+                                        .then(function(__result) {
                                             res.status(200).send('OK');
                                         })
                                         .catch(function(_err) {
@@ -144,10 +144,9 @@
                         id: 3,
                         rating: 5
                     }];
-                    //mudar para post e ter realmente os filmes aqui 
+                    //mudar para post e ter realmente os filmes aqui
                     database.updateAllMovies(movies, loggedUser.id)
                         .then(function(result) {
-                            console.log("eheh");
                             res.status(200).send(result);
                         })
                         .catch(function(err) {
