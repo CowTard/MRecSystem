@@ -6,7 +6,7 @@
         {{ user_Message }}
 </div>
 
-<div class="container">
+<div class="container" data-ng-init="getBestRatedMovies()">
 	<h3 class="text-center"> Recommended Movies</h3>
 	<table class="table table-condensed">
 	  <thead>
@@ -22,7 +22,7 @@
 	  	</tr>
 	  </thead>
 	  <tbody>
-	  	<tr ng-repeat="movie in movies">
+	  	<tr ng-repeat="movie in recommendedMovies | limitTo:3">
 	  		<td>{{movie.title}}</td>
 	  		<td>{{movie.actors}}</td>
 	  		<td>{{movie.directors}}</td>

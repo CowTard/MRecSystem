@@ -186,4 +186,18 @@
         });
     };
 
+    // Function to retrieve rating function
+    exports.getRatedMoviesForUser = function(userID) {
+        return new Promise(function(resolve, reject) {
+            client.query('Select * from predictions join movies on predictions.movieid = movies.id where userid = $1 order by rating DESC', userID, function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
 }());
