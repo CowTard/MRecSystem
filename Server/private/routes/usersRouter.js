@@ -48,7 +48,7 @@
                         if (err) {
                             res.status(406).send('Oops. Something went wrong!');
                         } else {
-                            if (err) {
+                            if (!_res) {
                                 res.status(406).send('Email or password don\'t checkout');
                             } else {
                                 res.status(200).send(req.body.username + '-' + _data.token);
