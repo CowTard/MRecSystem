@@ -54,7 +54,7 @@
                 });
         });
 
-        // Route that returns all reviewd movies from the requester
+        // Route that returns all reviewed movies from the requester
         server.get('/api/movies/reviewed', function(req, res) {
 
             // Get user in question by cookie
@@ -124,14 +124,21 @@
 
                     if (result.length > 0) {
 
-                        movieUtils.calculate_new_importance_function(result, 1)
-                            .then(function(updatedAtributeFunction) {
-                                res.status(200).send(updatedAtributeFunction);
+                        database.getMovieByID([102])
+                            .then(function(recentlyAddedMovie) {
+
+                                movieUtils.calculate_new_importance_function(result, recentlyAddedMovie)
+                                    .then(function(updatedAtributeFunction) {
+                                        res.status(200).send(updatedAtributeFunction);
+                                    })
+                                    .catch(function(err) {
+                                        res.status(406).send('Something went wrong...');
+                                    })
+
                             })
                             .catch(function(err) {
                                 res.status(406).send('Something went wrong...');
-                            })
-
+                            });
                     } else {
                         res.status(406).send('Not a single thing to evaluate');
                     }

@@ -60,7 +60,7 @@ def init():
     movies = get_page()
     
     # Not proud of this hack
-    if os.listdir('Subtitles/') == ['.DS_Store', '.gitignore']:
+    if os.listdir('Subtitles/') == ['.gitignore']:
 
         print('> Connecting to OpenSubtitles.')
     

@@ -7,8 +7,8 @@
     module.exports = {
 
         /*
-        	Receives the user movie preferences and the new one.
-        	@returns: An array with new importance atributes	
+            Receives the user movie preferences and the new one.
+            @returns: An array with new importance atributes    
         */
         calculate_new_importance_function: function(movieLikes, new_movie) {
 
@@ -26,7 +26,7 @@
                     // Time atributes
                     idletime: {},
                     runtime: {},
-                    talktime: {},
+                    talktime: {}
                 };
 
                 // Populating globalInformation object
@@ -65,8 +65,22 @@
                     globalInformation.talktime = updateTimingAtributeValues(globalInformation.talktime, [movie.talktime], isMovieLiked);
                 });
 
-                resolve(globalInformation
-);
+                var importance = {
+                    // Non time atributes
+                    actors: compareAtributes(globalInformation.actors, new_movie.actors.split('- ')),
+                    directors: compareAtributes(globalInformation.directors, new_movie.directors.split('- ')),
+                    writers: compareAtributes(globalInformation.writers, new_movie.writers.split('- ')),
+                    genre: compareAtributes(globalInformation.genre, new_movie.genre.split(', ')),
+                    rated: compareAtributes(globalInformation.rated, [new_movie.rated]),
+                    imdb: compareAtributes(globalInformation.writers, [new_movie.imdbrating]),
+                    year: compareAtributes(globalInformation.writers, [new_movie.year.substr(2, 1) + '0']),
+                    // Time atributes
+                    idletime: compareAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
+                    runtime: compareAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
+                    talktime: compareAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0'])
+                };
+
+                resolve(importance);
             });
         }
     };
@@ -92,6 +106,7 @@
         });
 
         return globalAtribute;
+
     };
 
     // A function that returns an update object as this { x: numberOfTimesThatWasRepeated}
@@ -107,6 +122,47 @@
         }
 
         return globalAtribute;
+
     };
+
+    // A function that compares the new movie atributes with old information system have
+    function compareAtributes(oldInformation, newInformation) {
+
+        var positiveBalanceOfParameters = 0,
+            mostLikedAtr = '',
+            numberOfLikes_ofMost_successul_att = -1000,
+            numberOfLikesNewParamHave = 0,
+            bonus = false; // A parameter has a bonus of 10% if a key of newly added movie is the most favorite
+
+        // Get most value information on this parameter
+        for (var atr in oldInformation) {
+
+            if (oldInformation[atr] > numberOfLikes_ofMost_successul_att) {
+                numberOfLikes_ofMost_successul_att = oldInformation[atr];
+                mostLikedAtr = atr;
+            }
+
+            if (oldInformation[atr] > 0) {
+                positiveBalanceOfParameters += oldInformation[atr];
+            }
+        }
+
+        // Check newly added actors with the information we got above
+        newInformation.forEach(function(value) {
+            if (oldInformation[value] > 0) {
+                numberOfLikesNewParamHave += oldInformation[value];
+
+                if (value == mostLikedAtr) {
+                    bonus = true;
+                }
+            }
+        });
+
+        var importance = (numberOfLikesNewParamHave / positiveBalanceOfParameters);
+
+        if (bonus && importance * 1.1 <= 1) importance = importance * 1.1;
+
+        return { importance: importance, favorite: mostLikedAtr };
+    }
 
 })();

@@ -17,7 +17,7 @@
             if (req.body.password == req.body.cpassword) {
                 bcrypt.hash(req.body.password, null, null, function(err, hash) {
                     if (err) {
-                        res.status(406).send('We couldn\'t hash your password.');
+                        res.status(406).send('We could not hash your password.');
                     } else {
                         crypto.randomBytes(32, function(err, buf) {
 

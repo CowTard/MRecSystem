@@ -59,7 +59,7 @@
     };
 
 
-    // Fuction to pass an array of json objects to a string.
+    // Function to pass an array of json objects to a string.
     function _asyncFor(_jsonObj) {
         return new Promise(function(resolve, reject) {
 
