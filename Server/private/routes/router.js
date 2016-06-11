@@ -53,7 +53,8 @@
             res.render('index');
         });
 
-        // Routes about users
+        // Routes about movies and users
+        require('./moviesRouter')(server);
         require('./usersRouter')(server);
     };
 
