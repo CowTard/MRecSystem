@@ -3,7 +3,8 @@
     'use strict';
 
     var database = require('../database/database'),
-        Promise = require('bluebird');
+        Promise = require('bluebird'),
+        movieUtils = require('../modules/movieUtils');
 
 
     // Definition of the routes related with authentication.
@@ -32,7 +33,26 @@
         });
 
         // Route responsible to handle the movie likes
-        server.post('/api/movie', function(req, res) {});
+        server.post('/api/movie', function(req, res) {
+
+            // Get user in question by cookie
+            var user = req.cookies.session.split('-')[0];
+            database.getSensitiveData([user])
+                .then(function(info) {
+
+                    database.insertReview([info.id, req.body.id, req.body.review])
+                        .then(function() {
+                            res.status(200).send('OK');
+                        })
+                        .catch(function() {
+                            res.status(406).send('Something went wrong on database insertion.');
+                        })
+
+                })
+                .catch(function(err) {
+                    res.status(406).send('There was something wrong.');
+                });
+        });
 
         // Route that returns all reviewd movies from the requester
         server.get('/api/movies/reviewed', function(req, res) {
@@ -99,66 +119,25 @@
 
         server.get('/test', function(req, res) {
 
-            database.getReviewedMovies([1])
+            database.getReviewedMovies([3])
                 .then(function(result) {
 
                     if (result.length > 0) {
-                        analizeLikedMovies(result, 1)
-                            .then(function(importance) {
 
-                                var number_of_atributes_increase_every_time = 4;
-
-                                var newFunction = calculateImportantAtt(importance[0], number_of_atributes_increase_every_time);
-
-                                // Add importance
-
-                                var sortable = [];
-                                for (var att in newFunction)
-                                    sortable.push([att, newFunction[att]]);
-
-                                sortable = sortable.sort(function(a, b) {
-                                    return a[1] - b[1];
-                                });
-
-                                var trade_attr_index = 0;
-                                for (var i = sortable.length - 1; i > 10 - number_of_atributes_increase_every_time; i--, trade_attr_index++) {
-
-                                    if (sortable[i][0] == 'decades')
-                                        sortable[i][0] = 'year';
-
-                                    if (sortable[trade_attr_index][0] == 'decades')
-                                        sortable[trade_attr_index][0] = 'year';
-
-                                    if (importance[1][sortable[trade_attr_index][0]] - sortable[i][1] >= 0) {
-
-                                        importance[1][sortable[i][0]] = parseFloat(importance[1][sortable[i][0]]) + sortable[i][1];
-                                        importance[1][sortable[trade_attr_index][0]] -= sortable[i][1];
-
-                                        importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
-                                        importance[1][sortable[trade_attr_index][0]] = importance[1][sortable[trade_attr_index][0]].toString();
-                                    } else {
-                                        importance[1][sortable[i][0]] += parseFloat(importance[1][sortable[trade_attr_index][0]]) - sortable[i][1];
-                                        importance[1][sortable[trade_attr_index][0]] = '0';
-
-                                        importance[1][sortable[i][0]] = importance[1][sortable[i][0]].toString();
-                                    }
-                                }
-
-
-                                res.status(200).send(importance[1]);
+                        movieUtils.calculate_new_importance_function(result, 1)
+                            .then(function(updatedAtributeFunction) {
+                                res.status(200).send(updatedAtributeFunction);
                             })
                             .catch(function(err) {
-                                console.log(err);
-                                res.status(406).send(err);
-                            });
+                                res.status(406).send('Something went wrong...');
+                            })
+
                     } else {
                         res.status(406).send('Not a single thing to evaluate');
                     }
                 })
                 .catch(function(_err) {
-
-                    console.log(_err);
-                    res.status(406).send('ok');
+                    res.status(406).send('Something went wrong...');
                 });
         });
 
