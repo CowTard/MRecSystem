@@ -72,8 +72,8 @@
                     writers: compareAtributes(globalInformation.writers, new_movie.writers.split('- ')),
                     genre: compareAtributes(globalInformation.genre, new_movie.genre.split(', ')),
                     rated: compareAtributes(globalInformation.rated, [new_movie.rated]),
-                    imdb: compareAtributes(globalInformation.writers, [new_movie.imdbrating]),
-                    year: compareAtributes(globalInformation.writers, [new_movie.year.substr(2, 1) + '0']),
+                    imdb: compareAtributes(globalInformation.imdb, [new_movie.imdbrating]),
+                    year: compareAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']),
                     // Time atributes
                     idletime: compareAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
                     runtime: compareAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
@@ -84,6 +84,9 @@
             });
         },
 
+        /*
+            Calculates new Rating function
+        */
         adjust_rating_function: function(old_rating_function, importanceValues) {
 
             return new Promise(function(resolve, reject) {
@@ -125,6 +128,62 @@
                 resolve(new_rating_function);
 
             });
+        },
+
+        /*
+            Calculate ratings.
+        */
+        processNewRatings: function(movies, balances, ratingFunction) {
+
+            return new Promise(function(resolve, reject) {
+
+                var balance = {};
+
+                for (var key in balances) {
+                    balance[key] = balances[key].balance;
+                }
+
+
+                var updateArray = [];
+
+                movies.forEach(function(value) {
+                    var rating = 0;
+                    // actors
+                    rating += Number(ratingFunction.actors) * contentValue(balance.actors, value.actors.split('- '));
+
+                    // directors
+                    rating += Number(ratingFunction.directors) * contentValue(balance.directors, value.directors.split('- '));
+
+                    // genre
+                    rating += Number(ratingFunction.genre) * contentValue(balance.genre, value.genre.split(', '));
+
+                    // idletime
+                    rating += Number(ratingFunction.idletime) * contentValue(balance.idletime, [value.idletime.toString().slice(0, -1) + '0']);
+
+                    // rated
+                    rating += Number(ratingFunction.rated) * contentValue(balance.rated, [value.rated]);
+
+                    // runtime
+                    rating += Number(ratingFunction.runtime) * contentValue(balance.runtime, [value.runtime.toString().slice(0, -1) + '0']);
+
+                    // talktime
+                    rating += Number(ratingFunction.talktime) * contentValue(balance.talktime, [value.talktime.toString().slice(0, -1) + '0']);
+
+                    // writers
+                    rating += Number(ratingFunction.writers) * contentValue(balance.writers, value.writers.split('- '));
+
+                    // year
+                    rating += Number(ratingFunction.year) * contentValue(balance.year, [value.year.substr(2, 1) + '0']);
+
+                    // imdbrating
+                    rating += Number(ratingFunction.imdbrating) * contentValue(balance.imdb, [value.imdbrating]);
+
+                    updateArray.push({ id: value.id, rating: Math.round(rating * 1000) / 100 })
+
+                })
+
+                resolve(updateArray);
+            })
         }
     };
 
@@ -190,11 +249,17 @@
 
         // Check newly added actors with the information we got above
         newInformation.forEach(function(value) {
-            if (oldInformation[value] > 0) {
-                numberOfLikesNewParamHave += oldInformation[value];
 
-                if (value == mostLikedAtr) {
-                    bonus = true;
+            if (oldInformation.hasOwnProperty(value)) {
+
+                oldInformation[value] += 1;
+
+                if (oldInformation[value] > 0) {
+                    numberOfLikesNewParamHave += oldInformation[value];
+
+                    if (value == mostLikedAtr) {
+                        bonus = true;
+                    }
                 }
             }
         });
@@ -203,7 +268,7 @@
 
         if (bonus && importance * 1.1 <= 1) importance = importance * 1.1;
 
-        return { importance: importance, favorite: mostLikedAtr };
+        return { importance: importance, balance: oldInformation, favorite: mostLikedAtr };
     }
 
     // A function that retrieves top importance scorer and bottom importance scorer.
@@ -220,5 +285,18 @@
         });
     }
 
+    // A function that retrieves a value based on its content and on information we have.
+    function contentValue(oldInformation, movieUnderReview) {
 
+        var contentValue = 0;
+
+        movieUnderReview.forEach(function(value) {
+
+            if (oldInformation.hasOwnProperty(value) && oldInformation[value] > 0) {
+                contentValue++;
+            }
+        });
+
+        return contentValue / movieUnderReview.length;
+    }
 })();

@@ -40,13 +40,111 @@
             database.getSensitiveData([user])
                 .then(function(info) {
 
-                    database.insertReview([info.id, req.body.id, req.body.review])
-                        .then(function() {
-                            res.status(200).send('OK');
+                    database.getReviewedMovies([info.id])
+                        .then(function(result) {
+
+                            if (result.length > 0) {
+
+                                database.getMovieByID([req.body.id])
+                                    .then(function(recentlyAddedMovie) {
+
+                                        movieUtils.calculate_new_importance_function(result, recentlyAddedMovie)
+                                            .then(function(updatedAtributeFunction) {
+
+                                                database.getRatingFunction([info.id])
+                                                    .then(function(old_rating_function) {
+
+                                                        movieUtils.adjust_rating_function(old_rating_function[0], updatedAtributeFunction)
+                                                            .then(function(rating_function) {
+
+                                                                var updating = [
+                                                                    rating_function.actors,
+                                                                    rating_function.directors,
+                                                                    rating_function.genre,
+                                                                    rating_function.idletime,
+                                                                    rating_function.rated,
+                                                                    rating_function.runtime,
+                                                                    rating_function.talktime,
+                                                                    rating_function.writers,
+                                                                    rating_function.year,
+                                                                    rating_function.imdbrating,
+                                                                    rating_function.userid,
+                                                                ];
+
+                                                                database.updateRatingFunction(updating)
+                                                                    .then(function() {
+
+                                                                        database.getMovies()
+                                                                            .then(function(movies) {
+
+                                                                                movieUtils.processNewRatings(movies, updatedAtributeFunction, rating_function)
+                                                                                    .then(function(updateRatings) {
+
+                                                                                        database.updateAllMovies(updateRatings, info.id)
+                                                                                            .then(function() {
+
+                                                                                                database.insertReview([info.id, req.body.id, req.body.review])
+                                                                                                    .then(function() {
+                                                                                                        res.status(200).send('OK');
+                                                                                                    })
+                                                                                                    .catch(function() {
+                                                                                                        res.status(406).send('Something went wrong on database insertion.');
+                                                                                                    })
+
+                                                                                            })
+                                                                                            .catch(function(err) {
+                                                                                                console.log(err);
+                                                                                                res.status(406).send(err);
+                                                                                            })
+                                                                                    })
+                                                                                    .catch(function(err) {
+                                                                                        console.log(err);
+                                                                                        res.status(406).send(err);
+                                                                                    })
+                                                                            })
+                                                                            .catch(function(err) {
+                                                                                console.log(err);
+                                                                                res.status(406).send('Something went wrong...');
+                                                                            })
+                                                                    })
+                                                                    .catch(function(err) {
+                                                                        console.log(err);
+                                                                        res.status(406).send('Something went wrong...');
+                                                                    })
+                                                            })
+                                                            .catch(function(err) {
+                                                                console.log(err);
+                                                                res.status(406).send('Something went wrong...');
+                                                            });
+                                                    })
+                                                    .catch(function(err) {
+                                                        console.log(err);
+                                                        res.status(406).send('Something went wrong...');
+                                                    });
+                                            })
+                                            .catch(function(err) {
+                                                console.log(err);
+                                                res.status(406).send('Something went wrong...');
+                                            })
+                                    })
+                                    .catch(function(err) {
+                                        res.status(406).send('Something went wrong...');
+                                    });
+
+                            } else {
+
+                                database.insertReview([info.id, req.body.id, req.body.review])
+                                    .then(function() {
+                                        res.status(200).send('OK');
+                                    })
+                                    .catch(function() {
+                                        res.status(406).send('Something went wrong on database insertion.');
+                                    })
+                            }
                         })
-                        .catch(function() {
-                            res.status(406).send('Something went wrong on database insertion.');
-                        })
+                        .catch(function(_err) {
+                            res.status(406).send('Something went wrong...');
+                        });
 
                 })
                 .catch(function(err) {
@@ -149,11 +247,34 @@
                                                             rating_function.imdbrating,
                                                             rating_function.userid,
                                                         ];
+
                                                         database.updateRatingFunction(updating)
                                                             .then(function() {
-                                                                res.status(200).send('OK');
+
+                                                                database.getMovies()
+                                                                    .then(function(movies) {
+
+                                                                        movieUtils.processNewRatings(movies, updatedAtributeFunction, rating_function)
+                                                                            .then(function(updateRatings) {
+
+                                                                                database.updateAllMovies(updateRatings, 3)
+                                                                                    .then(function() {
+                                                                                        res.status(200).send(updatedAtributeFunction);
+                                                                                    })
+                                                                                    .catch(function(err) {
+                                                                                        res.status(406).send(err);
+                                                                                    })
+                                                                            })
+                                                                            .catch(function(err) {
+                                                                                console.log(err);
+                                                                                res.status(406).send(err);
+                                                                            })
+                                                                    })
+                                                                    .catch(function(err) {
+                                                                        res.status(406).send('Something went wrong...');
+                                                                    })
                                                             })
-                                                            .catch(function() {
+                                                            .catch(function(err) {
                                                                 res.status(406).send('Something went wrong...');
                                                             })
                                                     })
@@ -167,6 +288,7 @@
                                             });
                                     })
                                     .catch(function(err) {
+                                        console.log(err);
                                         res.status(406).send('Something went wrong...');
                                     })
                             })
