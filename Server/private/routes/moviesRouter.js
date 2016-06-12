@@ -129,12 +129,46 @@
 
                                 movieUtils.calculate_new_importance_function(result, recentlyAddedMovie)
                                     .then(function(updatedAtributeFunction) {
-                                        res.status(200).send(updatedAtributeFunction);
+
+                                        database.getRatingFunction([3])
+                                            .then(function(old_rating_function) {
+
+                                                movieUtils.adjust_rating_function(old_rating_function[0], updatedAtributeFunction)
+                                                    .then(function(rating_function) {
+
+                                                        var updating = [
+                                                            rating_function.actors,
+                                                            rating_function.directors,
+                                                            rating_function.genre,
+                                                            rating_function.idletime,
+                                                            rating_function.rated,
+                                                            rating_function.runtime,
+                                                            rating_function.talktime,
+                                                            rating_function.writers,
+                                                            rating_function.year,
+                                                            rating_function.imdbrating,
+                                                            rating_function.userid,
+                                                        ];
+                                                        database.updateRatingFunction(updating)
+                                                            .then(function() {
+                                                                res.status(200).send('OK');
+                                                            })
+                                                            .catch(function() {
+                                                                res.status(406).send('Something went wrong...');
+                                                            })
+                                                    })
+                                                    .catch(function(err) {
+                                                        console.log(err);
+                                                        res.status(406).send('Something went wrong...');
+                                                    });
+                                            })
+                                            .catch(function(err) {
+                                                res.status(406).send('Something went wrong...');
+                                            });
                                     })
                                     .catch(function(err) {
                                         res.status(406).send('Something went wrong...');
                                     })
-
                             })
                             .catch(function(err) {
                                 res.status(406).send('Something went wrong...');

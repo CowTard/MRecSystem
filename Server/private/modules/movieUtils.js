@@ -82,6 +82,49 @@
 
                 resolve(importance);
             });
+        },
+
+        adjust_rating_function: function(old_rating_function, importanceValues) {
+
+            return new Promise(function(resolve, reject) {
+
+                for (var key in old_rating_function) {
+                    old_rating_function[key] = parseFloat(old_rating_function[key]);
+                }
+
+                var sorted = top_bot_Scorer(importanceValues);
+
+                // Increasing top performer and decreasing bottom performer
+
+                var topPerformer = sorted[0],
+                    new_param_import_to_add = old_rating_function[topPerformer[0]] * (1 + topPerformer[1].importance),
+                    new_rating_function = old_rating_function;
+
+                new_rating_function[topPerformer[0]] = new_rating_function[topPerformer[0]] + new_param_import_to_add;
+
+                // removing importance while decreasedValue < new_param_import_to_add
+                var decreasingRate = 0.7;
+                for (var i = sorted.length - 1; i >= 0; i--) {
+
+                    if (decreasingRate <= 0) break;
+
+                    var paramOnUse = sorted[i][0];
+
+                    if (paramOnUse == 'imdb') paramOnUse = 'imdbrating';
+
+                    if (Number(old_rating_function[paramOnUse] - new_param_import_to_add * decreasingRate) > 0) {
+                        new_rating_function[paramOnUse] = new_param_import_to_add * decreasingRate;
+                        decreasingRate -= 0.4;
+                    } else {
+                        if (new_rating_function[paramOnUse] === 0) continue;
+                        decreasingRate -= Number(old_rating_function[paramOnUse] / new_param_import_to_add);
+                        new_rating_function[paramOnUse] = 0;
+                    }
+                }
+
+                resolve(new_rating_function);
+
+            });
         }
     };
 
@@ -106,7 +149,6 @@
         });
 
         return globalAtribute;
-
     };
 
     // A function that returns an update object as this { x: numberOfTimesThatWasRepeated}
@@ -122,13 +164,12 @@
         }
 
         return globalAtribute;
-
     };
 
     // A function that compares the new movie atributes with old information system have
     function compareAtributes(oldInformation, newInformation) {
 
-        var positiveBalanceOfParameters = 0,
+        var positiveBalanceOfParameters = 1,
             mostLikedAtr = '',
             numberOfLikes_ofMost_successul_att = -1000,
             numberOfLikesNewParamHave = 0,
@@ -164,5 +205,20 @@
 
         return { importance: importance, favorite: mostLikedAtr };
     }
+
+    // A function that retrieves top importance scorer and bottom importance scorer.
+    function top_bot_Scorer(importanceValues) {
+
+        var sorted = [];
+
+        for (var param in importanceValues) {
+            sorted.push([param, importanceValues[param]]);
+        }
+
+        return sorted.sort(function(a, b) {
+            return b[1].importance - a[1].importance
+        });
+    }
+
 
 })();
