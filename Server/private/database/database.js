@@ -219,7 +219,7 @@
         return new Promise(function(resolve, reject) {
             client.query('select movies.*, movies_users.liked from predictions join movies on predictions.movieid = movies.id \
                           LEFT JOIN movies_users ON movies_users.movieid = movies.id \
-                          where predictions.userid = 1 and movies_users.userid = 1 \
+                          where predictions.userid = $1 and movies_users.userid = $1 \
                           and liked = false \
                           order by rating DESC', userID, function(err, result) {
                 if (err) {

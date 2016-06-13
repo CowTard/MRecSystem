@@ -67,17 +67,17 @@
 
                 var importance = {
                     // Non time atributes
-                    actors: compareAtributes(globalInformation.actors, new_movie.actors.split('- ')),
-                    directors: compareAtributes(globalInformation.directors, new_movie.directors.split('- ')),
-                    writers: compareAtributes(globalInformation.writers, new_movie.writers.split('- ')),
-                    genre: compareAtributes(globalInformation.genre, new_movie.genre.split(', ')),
-                    rated: compareAtributes(globalInformation.rated, [new_movie.rated]),
-                    imdb: compareAtributes(globalInformation.imdb, [new_movie.imdbrating]),
-                    year: compareAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']),
+                    actors: new_movie.liked ? comparePositiveAtributes(globalInformation.actors, new_movie.actors.split('- ')) : compareNegativeAtributes(globalInformation.actors, new_movie.actors.split('- ')),
+                    directors: new_movie.liked ? comparePositiveAtributes(globalInformation.directors, new_movie.directors.split('- ')) : compareNegativeAtributes(globalInformation.directors, new_movie.directors.split('- ')),
+                    writers: new_movie.liked ? comparePositiveAtributes(globalInformation.writers, new_movie.writers.split('- ')) : compareNegativeAtributes(globalInformation.writers, new_movie.writers.split('- ')),
+                    genre: new_movie.liked ? comparePositiveAtributes(globalInformation.genre, new_movie.genre.split(', ')) : compareNegativeAtributes(globalInformation.writers, new_movie.writers.split('- ')),
+                    rated: new_movie.liked ? comparePositiveAtributes(globalInformation.rated, [new_movie.rated]) : compareNegativeAtributes(globalInformation.rated, [new_movie.rated]),
+                    imdb: new_movie.liked ? comparePositiveAtributes(globalInformation.imdb, [new_movie.imdbrating]) : compareNegativeAtributes(globalInformation.imdb, [new_movie.imdbrating]),
+                    year: new_movie.liked ? comparePositiveAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']) : compareNegativeAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']),
                     // Time atributes
-                    idletime: compareAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
-                    runtime: compareAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
-                    talktime: compareAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0'])
+                    idletime: new_movie.liked ? comparePositiveAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']) : compareNegativeAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
+                    runtime: new_movie.liked ? comparePositiveAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']) : compareNegativeAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
+                    talktime: new_movie.liked ? comparePositiveAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0']) : compareNegativeAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0'])
                 };
 
                 resolve(importance);
@@ -225,8 +225,8 @@
         return globalAtribute;
     };
 
-    // A function that compares the new movie atributes with old information system have
-    function compareAtributes(oldInformation, newInformation) {
+    // A function that compares the new movie atributes with old information system we have
+    function comparePositiveAtributes(oldInformation, newInformation) {
 
         var positiveBalanceOfParameters = 1,
             mostLikedAtr = '',
@@ -270,6 +270,53 @@
 
         return { importance: importance, balance: oldInformation, favorite: mostLikedAtr };
     }
+
+    // A function that compares new movie at atrivutes with old information we have
+    function compareNegativeAtributes(oldInformation, newInformation) {
+
+        var negativeBalanceOfParameters = 1,
+            mostDislikedAtr = '',
+            numberOfLikes_ofMost_successul_att = 1000,
+            numberOfLDislikesNewParamHave = 0,
+            bonus = false; // A parameter has a bonus of 10% if a key of newly added movie is the most favorite
+
+        // Get most value information on this parameter
+        for (var atr in oldInformation) {
+
+            if (oldInformation[atr] < numberOfLikes_ofMost_successul_att) {
+                numberOfLikes_ofMost_successul_att = oldInformation[atr];
+                mostDislikedAtr = atr;
+            }
+
+            if (oldInformation[atr] < 0) {
+                negativeBalanceOfParameters += oldInformation[atr];
+            }
+        }
+
+        // Check newly added actors with the information we got above
+        newInformation.forEach(function(value) {
+
+            if (oldInformation.hasOwnProperty(value)) {
+
+                oldInformation[value] -= 1;
+
+                if (oldInformation[value] < 0) {
+                    numberOfLikesNewParamHave += Math.abs(oldInformation[value]);
+
+                    if (value == mostLikedAtr) {
+                        bonus = true;
+                    }
+                }
+            }
+        });
+
+        var importance = (numberOfLDislikesNewParamHave / negativeBalanceOfParameters);
+
+        if (bonus && importance * 1.1 <= 1) importance = importance * 1.1;
+
+        return { importance: importance, balance: oldInformation, favorite: mostLikedAtr };
+    }
+
 
     // A function that retrieves top importance scorer and bottom importance scorer.
     function top_bot_Scorer(importanceValues) {
