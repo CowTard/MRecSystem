@@ -217,7 +217,11 @@
     // Function to retrieve rating function
     exports.getRatedMoviesForUser = function(userID) {
         return new Promise(function(resolve, reject) {
-            client.query('Select * from predictions join movies on predictions.movieid = movies.id where userid = $1 order by rating DESC', userID, function(err, result) {
+            client.query('select movies.*, movies_users.liked from predictions join movies on predictions.movieid = movies.id \
+                          LEFT JOIN movies_users ON movies_users.movieid = movies.id \
+                          where predictions.userid = 1 and movies_users.userid = 1 \
+                          and liked = false \
+                          order by rating DESC', userID, function(err, result) {
                 if (err) {
                     console.log(err);
                     reject(err);
@@ -262,7 +266,7 @@
             client.query('select movies.*, movies_users.liked , movies_users.userid is not null as liked \
                             from movies LEFT JOIN movies_users \
                             ON movies_users.movieid = movies.id and movies_users.userid = $1 where movies.title like $2\
-                            ORDER BY movies.id;', [userid, '%' + movieTitle + '%'], function(err, result) {
+                            ORDER BY movies.id', [userid, '%' + movieTitle + '%'], function(err, result) {
                 if (err) {
                     console.log(err);
                     reject(err);
