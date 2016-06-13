@@ -48,7 +48,7 @@
                                 database.getMovieByID([req.body.id])
                                     .then(function(recentlyAddedMovie) {
 
-                                        movieUtils.calculate_new_importance_function(result, recentlyAddedMovie)
+                                        movieUtils.calculate_new_importance_function(result, recentlyAddedMovie, req.body.review)
                                             .then(function(updatedAtributeFunction) {
 
                                                 database.getRatingFunction([info.id])
