@@ -67,17 +67,17 @@
 
                 var importance = {
                     // Non time atributes
-                    actors: is_new_movie_liked ? comparePositiveAtributes(globalInformation.actors, new_movie.actors.split('- ')) : compareNegativeAtributes(globalInformation.actors, new_movie.actors.split('- ')),
-                    directors: is_new_movie_liked ? comparePositiveAtributes(globalInformation.directors, new_movie.directors.split('- ')) : compareNegativeAtributes(globalInformation.directors, new_movie.directors.split('- ')),
-                    writers: is_new_movie_liked ? comparePositiveAtributes(globalInformation.writers, new_movie.writers.split('- ')) : compareNegativeAtributes(globalInformation.writers, new_movie.writers.split('- ')),
-                    genre: is_new_movie_liked ? comparePositiveAtributes(globalInformation.genre, new_movie.genre.split(', ')) : compareNegativeAtributes(globalInformation.writers, new_movie.writers.split('- ')),
-                    rated: is_new_movie_liked ? comparePositiveAtributes(globalInformation.rated, [new_movie.rated]) : compareNegativeAtributes(globalInformation.rated, [new_movie.rated]),
-                    imdb: is_new_movie_liked ? comparePositiveAtributes(globalInformation.imdb, [new_movie.imdbrating]) : compareNegativeAtributes(globalInformation.imdb, [new_movie.imdbrating]),
-                    year: is_new_movie_liked ? comparePositiveAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']) : compareNegativeAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']),
+                    actors: comparePositiveAtributes(globalInformation.actors, new_movie.actors.split('- ')),
+                    directors: comparePositiveAtributes(globalInformation.directors, new_movie.directors.split('- ')),
+                    writers: comparePositiveAtributes(globalInformation.writers, new_movie.writers.split('- ')),
+                    genre: comparePositiveAtributes(globalInformation.genre, new_movie.genre.split(', ')),
+                    rated: comparePositiveAtributes(globalInformation.rated, [new_movie.rated]),
+                    imdb: comparePositiveAtributes(globalInformation.imdb, [new_movie.imdbrating]),
+                    year: comparePositiveAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']),
                     // Time atributes
-                    idletime: is_new_movie_liked ? comparePositiveAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']) : compareNegativeAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
-                    runtime: is_new_movie_liked ? comparePositiveAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']) : compareNegativeAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
-                    talktime: is_new_movie_liked ? comparePositiveAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0']) : compareNegativeAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0'])
+                    idletime: comparePositiveAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
+                    runtime: comparePositiveAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
+                    talktime: comparePositiveAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0'])
                 };
 
                 resolve(importance);
@@ -131,8 +131,6 @@
                     }
                 }
 
-                console.log("Sum of decreased: " + sumOfDecreased);
-                console.log("Sum neeed: " + new_param_import_to_add);
                 new_rating_function[topPerformer[0]] += sumOfDecreased;
 
                 resolve(new_rating_function);
@@ -299,7 +297,7 @@
             }
 
             if (oldInformation[atr] < 0) {
-                negativeBalanceOfParameters += oldInformation[atr];
+                negativeBalanceOfParameters += Math.abs(oldInformation[atr]);
             }
         }
 

@@ -18,12 +18,12 @@
 	  	<th>Genre</th>
 	  	<th>Rated</th>
 	  	<th>Year</th>
-	  	<th>Imdb Rating</th>
+	  	<th>Our Rating</th>
 	  	<th>Did you like this movie?</th>
 	  	</tr>
 	  </thead>
 	  <tbody>
-	  	<tr ng-repeat="movie in recommendedMovies | limitTo:3">
+	  	<tr ng-repeat="movie in recommendedMovies | limitTo:5">
 	  		<td>{{movie.title}}</td>
 	  		<td>{{movie.actors}}</td>
 	  		<td>{{movie.directors}}</td>
@@ -31,7 +31,7 @@
 	  		<td>{{movie.genre}}</td>
 	  		<td>{{movie.rated}}</td>
 	  		<td>{{movie.year}}</td>
-	  		<td>{{movie.imdbrating}}</td>
+	  		<td>{{movie.rating}}</td>
 	  		<td></td>
 	  		<td><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-up" ng-click="likedMovie(movie.id, false, true)"></button><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-down" ng-click="likedMovie(movie.id, false, false)"></button></td>
 	  	</tr>

@@ -218,7 +218,7 @@
     exports.getRatedMoviesForUser = function(userID) {
         return new Promise(function(resolve, reject) {
 
-            client.query('SELECT movies.* FROM predictions \
+            client.query('SELECT movies.*, predictions.rating FROM predictions \
                                   join movies on predictions.movieid = movies.id \
                                   LEFT JOIN movies_users ON movies_users.movieid = movies.id WHERE predictions.userid = $1 and movies_users.userid is not null = false order by rating DESC', userID, function(err, result) {
                 if (err) {
@@ -234,7 +234,7 @@
     // Function to update best atributes
     exports.updateBestAtributes = function(user) {
         return new Promise(function(resolve, reject) {
-            client.query('UPDATE bestAtributes SET actors = $1 ,directors = $2, genre = $3, idleTime = $4, rated = $5, runtime = $6, talktime = $7, \
+            client.query('UPDATE bestatributes SET actors = $1 ,directors = $2, genre = $3, idleTime = $4, rated = $5, runtime = $6, talktime = $7, \
                     writers = $8, year = $9, imdbrating = $10 WHERE userid = $11', user, function(err, result) {
                 if (err) {
                     console.log(err);

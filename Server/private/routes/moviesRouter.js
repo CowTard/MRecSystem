@@ -51,46 +51,68 @@
                                         movieUtils.calculate_new_importance_function(result, recentlyAddedMovie, req.body.review)
                                             .then(function(updatedAtributeFunction) {
 
-                                                database.getRatingFunction([info.id])
-                                                    .then(function(old_rating_function) {
+                                                // best attributes
+                                                var bestAtr = [
+                                                    updatedAtributeFunction.actors.favorite,
+                                                    updatedAtributeFunction.directors.favorite,
+                                                    updatedAtributeFunction.genre.favorite,
+                                                    updatedAtributeFunction.idletime.favorite,
+                                                    updatedAtributeFunction.rated.favorite,
+                                                    updatedAtributeFunction.runtime.favorite,
+                                                    updatedAtributeFunction.talktime.favorite,
+                                                    updatedAtributeFunction.writers.favorite,
+                                                    updatedAtributeFunction.year.favorite,
+                                                    updatedAtributeFunction.imdb.favorite,
+                                                    info.id
+                                                ]
 
-                                                        movieUtils.adjust_rating_function(old_rating_function[0], updatedAtributeFunction)
-                                                            .then(function(rating_function) {
+                                                database.updateBestAtributes(bestAtr)
+                                                    .then(function(w) {
+                                                        database.getRatingFunction([info.id])
+                                                            .then(function(old_rating_function) {
 
-                                                                var updating = [
-                                                                    Math.round(rating_function.actors * 10000) / 10000,
-                                                                    Math.round(rating_function.directors * 10000) / 10000,
-                                                                    Math.round(rating_function.genre * 10000) / 10000,
-                                                                    Math.round(rating_function.idletime * 10000) / 10000,
-                                                                    Math.round(rating_function.rated * 10000) / 10000,
-                                                                    Math.round(rating_function.runtime * 10000) / 10000,
-                                                                    Math.round(rating_function.talktime * 10000) / 10000,
-                                                                    Math.round(rating_function.writers * 10000) / 10000,
-                                                                    Math.round(rating_function.year * 10000) / 10000,
-                                                                    Math.round(rating_function.imdbrating * 10000) / 10000,
-                                                                    Math.round(rating_function.userid * 10000) / 10000,
-                                                                ];
+                                                                movieUtils.adjust_rating_function(old_rating_function[0], updatedAtributeFunction)
+                                                                    .then(function(rating_function) {
 
-                                                                database.updateRatingFunction(updating)
-                                                                    .then(function() {
+                                                                        var updating = [
+                                                                            Math.round(rating_function.actors * 10000) / 10000,
+                                                                            Math.round(rating_function.directors * 10000) / 10000,
+                                                                            Math.round(rating_function.genre * 10000) / 10000,
+                                                                            Math.round(rating_function.idletime * 10000) / 10000,
+                                                                            Math.round(rating_function.rated * 10000) / 10000,
+                                                                            Math.round(rating_function.runtime * 10000) / 10000,
+                                                                            Math.round(rating_function.talktime * 10000) / 10000,
+                                                                            Math.round(rating_function.writers * 10000) / 10000,
+                                                                            Math.round(rating_function.year * 10000) / 10000,
+                                                                            Math.round(rating_function.imdbrating * 10000) / 10000,
+                                                                            Math.round(rating_function.userid * 10000) / 10000,
+                                                                        ];
 
-                                                                        database.getMovies()
-                                                                            .then(function(movies) {
+                                                                        database.updateRatingFunction(updating)
+                                                                            .then(function() {
 
-                                                                                movieUtils.processNewRatings(movies, updatedAtributeFunction, rating_function)
-                                                                                    .then(function(updateRatings) {
+                                                                                database.getMovies()
+                                                                                    .then(function(movies) {
 
-                                                                                        database.updateAllMovies(updateRatings, info.id)
-                                                                                            .then(function() {
+                                                                                        movieUtils.processNewRatings(movies, updatedAtributeFunction, rating_function)
+                                                                                            .then(function(updateRatings) {
 
-                                                                                                database.insertReview([info.id, req.body.id, req.body.review])
+                                                                                                database.updateAllMovies(updateRatings, info.id)
                                                                                                     .then(function() {
-                                                                                                        res.status(200).send('OK');
-                                                                                                    })
-                                                                                                    .catch(function() {
-                                                                                                        res.status(406).send('Something went wrong on database insertion.');
-                                                                                                    })
 
+                                                                                                        database.insertReview([info.id, req.body.id, req.body.review])
+                                                                                                            .then(function() {
+                                                                                                                res.status(200).send('OK');
+                                                                                                            })
+                                                                                                            .catch(function() {
+                                                                                                                res.status(406).send('Something went wrong on database insertion.');
+                                                                                                            })
+
+                                                                                                    })
+                                                                                                    .catch(function(err) {
+                                                                                                        console.log(err);
+                                                                                                        res.status(406).send(err);
+                                                                                                    })
                                                                                             })
                                                                                             .catch(function(err) {
                                                                                                 console.log(err);
@@ -99,7 +121,7 @@
                                                                                     })
                                                                                     .catch(function(err) {
                                                                                         console.log(err);
-                                                                                        res.status(406).send(err);
+                                                                                        res.status(406).send('Something went wrong...');
                                                                                     })
                                                                             })
                                                                             .catch(function(err) {
@@ -110,7 +132,7 @@
                                                                     .catch(function(err) {
                                                                         console.log(err);
                                                                         res.status(406).send('Something went wrong...');
-                                                                    })
+                                                                    });
                                                             })
                                                             .catch(function(err) {
                                                                 console.log(err);
@@ -120,7 +142,7 @@
                                                     .catch(function(err) {
                                                         console.log(err);
                                                         res.status(406).send('Something went wrong...');
-                                                    });
+                                                    })
                                             })
                                             .catch(function(err) {
                                                 console.log(err);
