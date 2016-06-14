@@ -2,7 +2,8 @@
 
     'use strict';
 
-    var Promise = require('bluebird');
+    var Promise = require('bluebird'),
+        database = require('../database/database')
 
     module.exports = {
 
@@ -354,4 +355,5 @@
 
         return contentValue / movieUnderReview.length;
     }
+
 })();

@@ -276,5 +276,32 @@
         });
     };
 
+    exports.getBestAttributes = function(userID) {
+        return new Promise(function(resolve, reject) {
+
+            client.query('Select * from bestatributes where userid = $1', userID, function(err, result) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result.rows[0]);
+                }
+            });
+
+        });
+    }
+
+    exports.getMoviesWithFavParam = function(param, favorite, userID) {
+
+        return new Promise(function(resolve, reject) {
+            client.query('Select * from movies where cast(' + param + ' as TEXT) like $1', ['%' + favorite + '%'], function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    }
 
 }());

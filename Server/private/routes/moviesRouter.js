@@ -226,7 +226,69 @@
                 .then(function(_info) {
                     database.getRatedMoviesForUser([_info.id])
                         .then(function(result) {
-                            res.status(200).send(result);
+
+                            database.getBestAttributes([_info.id])
+                                .then(function(favorites) {
+
+
+                                    var randomIndice = Math.floor(Math.random() * 9) + 1;
+
+                                    // get indice
+                                    var favParam = '',
+                                        index = 0;
+
+                                    for (var i in favorites) {
+
+                                        if (randomIndice == index) {
+                                            favParam = i;
+                                        }
+
+                                        index++;
+                                    }
+
+                                    if (favParam == 'runtime' || favParam == 'talktime' || favParam == 'idletime') {
+                                        favorites[favParam] = favorites[favParam].slice(0, favorites[favParam].length - 1);
+                                    } else if (favParam == 'year') {
+                                        if (!Number(favorites[favParam]) < 20) {
+                                            favorites[favParam] = '19' + favorites[favParam].slice(0, 1);
+                                        } else {
+                                            favorites[favParam] = '20' + favorites[favParam].slice(0, 1);
+                                        }
+                                    } else if (favParam == 'imdbrating') {
+                                        favorites[favParam] = favorites[favParam].slice(0, 2);
+                                    }
+
+                                    database.getMoviesWithFavParam(favParam, favorites[favParam], _info.id)
+                                        .then(function(Fav) {
+
+                                            for (var i = 0; i < Fav.length; i++) {
+                                                Fav[i].like = favParam;
+                                            }
+
+
+                                            result[0].like = 'Rating';
+                                            result[1].like = 'Rating';
+
+                                            var toReturn = [];
+
+                                            if (Fav.length > 0) {
+                                                toReturn.push(Fav[0]);
+                                                toReturn.push(result[0]);
+                                            } else {
+                                                toReturn.push(result[0]);
+                                                toReturn.push(result[1]);
+                                            }
+
+                                            res.status(200).send(toReturn);
+                                        })
+                                        .catch(function(err) {
+                                            console.log(err);
+                                            res.status(406).send(err);
+                                        })
+                                })
+                                .catch(function(err) {
+                                    res.status(406).send(err);
+                                })
                         })
                         .catch(function(err) {
                             res.status(406).send(err);

@@ -18,7 +18,7 @@
 	  	<th>Genre</th>
 	  	<th>Rated</th>
 	  	<th>Year</th>
-	  	<th>Our Rating</th>
+	  	<th>Why is this good?</th>
 	  	<th>Did you like this movie?</th>
 	  	</tr>
 	  </thead>
@@ -31,8 +31,7 @@
 	  		<td>{{movie.genre}}</td>
 	  		<td>{{movie.rated}}</td>
 	  		<td>{{movie.year}}</td>
-	  		<td>{{movie.rating}}</td>
-	  		<td></td>
+	  		<td>{{movie.like}}</td>
 	  		<td><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-up" ng-click="likedMovie(movie.id, false, true)"></button><button style="margin-left: 20px" class="glyphicon glyphicon-thumbs-down" ng-click="likedMovie(movie.id, false, false)"></button></td>
 	  	</tr>
 	  </tbody>
@@ -70,7 +69,7 @@
 </div>
 
 <div class="container">
-	<h3 class="text-center"> Disiked Movies</h3>
+	<h3 class="text-center"> Disliked Movies</h3>
 	<table class="table table-condensed">
 	  <thead>
 	  	<tr>
