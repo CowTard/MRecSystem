@@ -58,17 +58,17 @@
                                                             .then(function(rating_function) {
 
                                                                 var updating = [
-                                                                    rating_function.actors,
-                                                                    rating_function.directors,
-                                                                    rating_function.genre,
-                                                                    rating_function.idletime,
-                                                                    rating_function.rated,
-                                                                    rating_function.runtime,
-                                                                    rating_function.talktime,
-                                                                    rating_function.writers,
-                                                                    rating_function.year,
-                                                                    rating_function.imdbrating,
-                                                                    rating_function.userid,
+                                                                    Math.round(rating_function.actors * 10000) / 10000,
+                                                                    Math.round(rating_function.directors * 10000) / 10000,
+                                                                    Math.round(rating_function.genre * 10000) / 10000,
+                                                                    Math.round(rating_function.idletime * 10000) / 10000,
+                                                                    Math.round(rating_function.rated * 10000) / 10000,
+                                                                    Math.round(rating_function.runtime * 10000) / 10000,
+                                                                    Math.round(rating_function.talktime * 10000) / 10000,
+                                                                    Math.round(rating_function.writers * 10000) / 10000,
+                                                                    Math.round(rating_function.year * 10000) / 10000,
+                                                                    Math.round(rating_function.imdbrating * 10000) / 10000,
+                                                                    Math.round(rating_function.userid * 10000) / 10000,
                                                                 ];
 
                                                                 database.updateRatingFunction(updating)

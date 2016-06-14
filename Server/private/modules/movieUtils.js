@@ -65,7 +65,6 @@
                     globalInformation.talktime = updateTimingAtributeValues(globalInformation.talktime, [movie.talktime], isMovieLiked);
                 });
 
-                console.log(new_movie);
                 var importance = {
                     // Non time atributes
                     actors: is_new_movie_liked ? comparePositiveAtributes(globalInformation.actors, new_movie.actors.split('- ')) : compareNegativeAtributes(globalInformation.actors, new_movie.actors.split('- ')),
@@ -99,32 +98,42 @@
                 var sorted = top_bot_Scorer(importanceValues);
 
                 // Increasing top performer and decreasing bottom performer
-
                 var topPerformer = sorted[0],
-                    new_param_import_to_add = old_rating_function[topPerformer[0]] * (1 + topPerformer[1].importance),
+                    new_param_import_to_add = old_rating_function[topPerformer[0]] * (1 + topPerformer[1].importance) / 10,
                     new_rating_function = old_rating_function;
 
-                new_rating_function[topPerformer[0]] = new_rating_function[topPerformer[0]] + new_param_import_to_add;
-
                 // removing importance while decreasedValue < new_param_import_to_add
-                var decreasingRate = 0.7;
-                for (var i = sorted.length - 1; i >= 0; i--) {
+                var sumOfDecreased = 0;
 
-                    if (decreasingRate <= 0) break;
+                for (var i = sorted.length - 1; i > 0; i--) {
+
+                    if (sumOfDecreased / new_param_import_to_add >= 1) break;
 
                     var paramOnUse = sorted[i][0];
 
                     if (paramOnUse == 'imdb') paramOnUse = 'imdbrating';
 
-                    if (Number(old_rating_function[paramOnUse] - new_param_import_to_add * decreasingRate) > 0) {
-                        new_rating_function[paramOnUse] = new_param_import_to_add * decreasingRate;
-                        decreasingRate -= 0.4;
+                    var missingAdd = new_param_import_to_add - sumOfDecreased;
+
+                    var toRemoveOnThisParameter = 0.75 * missingAdd;
+
+                    if (old_rating_function[paramOnUse] - toRemoveOnThisParameter >= 0) {
+                        sumOfDecreased += toRemoveOnThisParameter;
+
+                        new_rating_function[paramOnUse] -= toRemoveOnThisParameter;
                     } else {
-                        if (new_rating_function[paramOnUse] === 0) continue;
-                        decreasingRate -= Number(old_rating_function[paramOnUse] / new_param_import_to_add);
-                        new_rating_function[paramOnUse] = 0;
+
+                        var maxToRemove = 0.70 * old_rating_function[paramOnUse];
+
+                        sumOfDecreased += maxToRemove;
+
+                        new_rating_function[paramOnUse] -= maxToRemove;
                     }
                 }
+
+                console.log("Sum of decreased: " + sumOfDecreased);
+                console.log("Sum neeed: " + new_param_import_to_add);
+                new_rating_function[topPerformer[0]] += sumOfDecreased;
 
                 resolve(new_rating_function);
 
