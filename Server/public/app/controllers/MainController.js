@@ -96,6 +96,15 @@
             }
         };
 
+        $scope.reload = function() {
+            location.reload();
+        }
+
+        $scope.likedMovieReload = function(_movieID, isMovieLiked, review) {
+            $scope.likedMovie(_movieID, isMovieLiked, review);
+            $scope.reload();
+        }
+
         // Scope function to go to search results
         $scope.searchMovieInit = function(movieTitle) {
 
