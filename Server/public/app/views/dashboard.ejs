@@ -2,11 +2,17 @@
 
 <div ng-include="'app/views/shared/header.ejs'"></div>
 
-<div class="container" ng-init="getMovies()">
+<div class="container" ng-controller="MovieController" ng-init="getMovies(); getReviewedMovies()" >
     <div class="alert alert-danger" role="alert" ng-if="user_Message">
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <span class="sr-only">Error:</span>
         {{ user_Message }}
+    </div>
+
+    <div class="alert alert-info" role="alert" ng-if="reviewedMovies < 2">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">Info:</span>
+        Please like 2 movies to start.
     </div>
 
     <div ng-repeat="movie in _moviesOnDatabase" ng-if="$index % 4 == 0" class="row">

@@ -293,14 +293,33 @@
     exports.getMoviesWithFavParam = function(param, favorite, userID) {
 
         return new Promise(function(resolve, reject) {
-            client.query('Select * from movies where cast(' + param + ' as TEXT) like $1', ['%' + favorite + '%'], function(err, result) {
+            client.query('select movies.* \
+                            from movies LEFT JOIN movies_users \
+                            ON movies_users.movieid = movies.id and movies_users.userid = $1 \
+                            WHERE cast(movies.' + param + ' as TEXT) like $2 and movies_users.userid is not null = false \
+                            ORDER BY movies.id', [userID, '%' + favorite + '%'],
+                function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        resolve(result.rows);
+                    }
+                });
+        });
+    }
+
+    exports.getSimilarUser = function(userID) {
+        return new Promise(function(resolve, reject) {
+
+            client.query('Select user2id from users_similarity where user1id = $1', userID, function(err, result) {
                 if (err) {
-                    console.log(err);
                     reject(err);
                 } else {
-                    resolve(result.rows);
+                    resolve(result.rows[0]);
                 }
             });
+
         });
     }
 

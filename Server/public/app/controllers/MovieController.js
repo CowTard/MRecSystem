@@ -7,6 +7,7 @@
         console.log('Movie Controller loaded.');
         $scope.likedMovies = [];
         $scope.dislikedMovies = [];
+        $scope.reviewedMovies = 3;
         // Function to get all reviewed movies
         $scope.getReviewedMovies = function() {
             var i;
@@ -17,6 +18,9 @@
                             $scope.likedMovies.push(result.data[i]);
                         else $scope.dislikedMovies.push(result.data[i]);
                     }
+
+                    $scope.reviewedMovies = i;
+
                 })
                 .catch(function(err) {
                     $scope.user_Message = result.data;

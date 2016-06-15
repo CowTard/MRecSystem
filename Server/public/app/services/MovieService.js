@@ -16,6 +16,7 @@
                     deferred.resolve(result);
                 })
                 .error(function(err) {
+                    console.log(err);
                     deferred.reject(err);
                 });
         };
