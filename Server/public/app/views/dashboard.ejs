@@ -24,11 +24,11 @@
                         <div class="nd-content_inner1">
                             <h3 class="nd-title"><span>{{movie.title}}</span></h3>
                             <span class="nd-icon">
-                                <span ng-if="!movie.liked" ng-click="likedMovie(movie.id, movie.liked, false)" class="fa fa-thumbs-o-down fa-fw"></span>
+                                <span ng-if="!movie.liked" ng-click="likedMovie(movie.id, movie.liked, false, false)" class="fa fa-thumbs-o-down fa-fw"></span>
                                 <span ng-if="movie.liked" class="fa fa-thumbs-down fa-fw"></span>
                             </span>
                             <span class="nd-icon">
-                                <span ng-if="!movie.liked" ng-click="likedMovie(movie.id, movie.liked, true)" class="fa fa-thumbs-o-up fa-fw"></span>
+                                <span ng-if="!movie.liked" ng-click="likedMovie(movie.id, movie.liked, true, false)" class="fa fa-thumbs-o-up fa-fw"></span>
                                 <span ng-if="movie.liked" class="fa fa-thumbs-up fa-fw"></span>
                             </span>
                         </div>                  
@@ -46,11 +46,11 @@
                         <div class="nd-content_inner1">
                             <h3 class="nd-title"><span>{{_moviesOnDatabase[$index+1].title}}</span></h3>
                             <span class="nd-icon">
-                                <span ng-if="!_moviesOnDatabase[$index+1].liked" ng-click="likedMovie(_moviesOnDatabase[$index+1].id, _moviesOnDatabase[$index+1].liked, false)" class="fa fa-thumbs-o-down fa-fw"></span>
+                                <span ng-if="!_moviesOnDatabase[$index+1].liked" ng-click="likedMovie(_moviesOnDatabase[$index+1].id, _moviesOnDatabase[$index+1].liked, false, false)" class="fa fa-thumbs-o-down fa-fw"></span>
                                 <span ng-if="_moviesOnDatabase[$index+1].liked" class="fa fa-thumbs-down fa-fw"></span>
                             </span>
                             <span class="nd-icon">
-                                <span ng-if="!_moviesOnDatabase[$index+1].liked" ng-click="likedMovie(_moviesOnDatabase[$index+1].id, _moviesOnDatabase[$index+1].liked, true)" class="fa fa-thumbs-o-up fa-fw">
+                                <span ng-if="!_moviesOnDatabase[$index+1].liked" ng-click="likedMovie(_moviesOnDatabase[$index+1].id, _moviesOnDatabase[$index+1].liked, true, false)" class="fa fa-thumbs-o-up fa-fw">
                                 </span>
                                 <span ng-if="_moviesOnDatabase[$index+1].liked" class="fa fa-thumbs-up fa-fw">
                                 </span>
@@ -70,11 +70,11 @@
                         <div class="nd-content_inner1">
                             <h3 class="nd-title"><span>{{_moviesOnDatabase[$index+2].title}}</span></h3>
                             <span class="nd-icon">
-                                <span ng-if="!_moviesOnDatabase[$index+2].liked" ng-click="likedMovie(_moviesOnDatabase[$index+2].id, _moviesOnDatabase[$index+2].liked, false)" class="fa fa-thumbs-o-down fa-fw"></span>
+                                <span ng-if="!_moviesOnDatabase[$index+2].liked" ng-click="likedMovie(_moviesOnDatabase[$index+2].id, _moviesOnDatabase[$index+2].liked, false, false)" class="fa fa-thumbs-o-down fa-fw"></span>
                                 <span ng-if="_moviesOnDatabase[$index+2].liked" class="fa fa-thumbs-down fa-fw"></span>
                             </span>
                             <span class="nd-icon">
-                                <span ng-if="!_moviesOnDatabase[$index+2].liked" ng-click="likedMovie(_moviesOnDatabase[$index+2].id, _moviesOnDatabase[$index+2].liked, true)" class="fa fa-thumbs-o-up fa-fw"></span>
+                                <span ng-if="!_moviesOnDatabase[$index+2].liked" ng-click="likedMovie(_moviesOnDatabase[$index+2].id, _moviesOnDatabase[$index+2].liked, true, false)" class="fa fa-thumbs-o-up fa-fw"></span>
                                 <span ng-if="_moviesOnDatabase[$index+2].liked" class="fa fa-thumbs-up fa-fw"></span>
                             </span>
                         </div>                  
@@ -92,11 +92,11 @@
                         <div class="nd-content_inner1">
                             <h3 class="nd-title"><span>{{_moviesOnDatabase[$index+3].title}}</span></h3>
                             <span class="nd-icon">
-                                <span ng-if="!_moviesOnDatabase[$index+3].liked" ng-click="likedMovie(_moviesOnDatabase[$index+3].id, _moviesOnDatabase[$index+3].liked, false)" class="fa fa-thumbs-o-down fa-fw"></span>
+                                <span ng-if="!_moviesOnDatabase[$index+3].liked" ng-click="likedMovie(_moviesOnDatabase[$index+3].id, _moviesOnDatabase[$index+3].liked, false, false)" class="fa fa-thumbs-o-down fa-fw"></span>
                                 <span ng-if="_moviesOnDatabase[$index+3].liked" class="fa fa-thumbs-down fa-fw"></span>
                             </span>
                             <span class="nd-icon">
-                                <span ng-if="!_moviesOnDatabase[$index+3].liked" ng-click="likedMovie(_moviesOnDatabase[$index+3].id, _moviesOnDatabase[$index+3].liked, true)" class="fa fa-thumbs-o-up fa-fw">
+                                <span ng-if="!_moviesOnDatabase[$index+3].liked" ng-click="likedMovie(_moviesOnDatabase[$index+3].id, _moviesOnDatabase[$index+3].liked, true, false)" class="fa fa-thumbs-o-up fa-fw">
                                 </span>
                                 <span ng-if="_moviesOnDatabase[$index+3].liked" class="fa fa-thumbs-up fa-fw">
                                 </span>

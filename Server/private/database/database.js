@@ -323,4 +323,18 @@
         });
     }
 
+    // Function to insert a 'like' on certain movie
+    exports.insertReviewOnPredictedMovie = function(data) {
+        return new Promise(function(resolve, reject) {
+            client.query('INSERT INTO predictions_movies_users (userid, movieID, liked) VALUES($1,$2, $3)', data, function(err, result) {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    resolve(result.rows);
+                }
+            });
+        });
+    };
+
 }());

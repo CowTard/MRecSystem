@@ -81,11 +81,11 @@
         };
 
         // Scope function to like movie
-        $scope.likedMovie = function(_movieID, isMovieLiked, review) {
+        $scope.likedMovie = function(_movieID, isMovieLiked, review, predicted) {
 
             if (!isMovieLiked) {
 
-                MainService.likedMovie(_movieID, review)
+                MainService.likedMovie(_movieID, review, predicted)
                     .then(function(_result) {
                         // hack...
                         $scope.getMovies();
@@ -100,8 +100,8 @@
             location.reload();
         }
 
-        $scope.likedMovieReload = function(_movieID, isMovieLiked, review) {
-            $scope.likedMovie(_movieID, isMovieLiked, review);
+        $scope.likedMovieReload = function(_movieID, isMovieLiked, review, predicted) {
+            $scope.likedMovie(_movieID, isMovieLiked, review, predicted);
             $scope.reload();
         }
 
