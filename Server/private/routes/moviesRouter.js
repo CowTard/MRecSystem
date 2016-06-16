@@ -102,6 +102,15 @@
 
                                                                                                         database.insertReview([info.id, req.body.id, req.body.review])
                                                                                                             .then(function() {
+                                                                                                                if (req.body.predicted) {
+                                                                                                                    database.insertReviewOnPredictedMovie([info.id, req.body.id, req.body.review])
+                                                                                                                        .then(function() {
+                                                                                                                            res.status(200).send('OK');
+                                                                                                                        })
+                                                                                                                        .catch(function() {
+                                                                                                                            res.status(406).send('Something went wrong on prediction database insertion.');
+                                                                                                                        })
+                                                                                                                }
                                                                                                                 res.status(200).send('OK');
                                                                                                             })
                                                                                                             .catch(function() {
