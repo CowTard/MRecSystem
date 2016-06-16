@@ -3,20 +3,20 @@
     'use strict';
 
     var Promise = require('bluebird'),
-        database = require('../database/database')
+        database = require('../database/database');
 
     module.exports = {
 
         /*
             Receives the user movie preferences and the new one.
-            @returns: An array with new importance atributes    
+            @returns: An array with new importance attributes
         */
-        calculate_new_importance_function: function(movieLikes, new_movie, is_new_movie_liked) {
+        calculate_new_importance_function: function(movieLikes, new_movie) {
 
             return new Promise(function(resolve, reject) {
 
                 var globalInformation = {
-                    // Non time atributes
+                    // Non time attributes
                     actors: {},
                     directors: {},
                     writers: {},
@@ -24,7 +24,7 @@
                     rated: {},
                     imdb: {},
                     year: {},
-                    // Time atributes
+                    // Time attributes
                     idletime: {},
                     runtime: {},
                     talktime: {}
@@ -36,49 +36,50 @@
                     var isMovieLiked = movie.liked ? 1 : -1;
 
                     // Actors
-                    globalInformation.actors = updateNonTimingAtributeValues(globalInformation.actors, movie.actors.split('- '), isMovieLiked);
+                    globalInformation.actors = updateNonTimingAttributeValues(globalInformation.actors, movie.actors.split('- '), isMovieLiked);
 
                     // Directors
-                    globalInformation.directors = updateNonTimingAtributeValues(globalInformation.directors, movie.directors.split('- '), isMovieLiked);
+                    globalInformation.directors = updateNonTimingAttributeValues(globalInformation.directors, movie.directors.split('- '), isMovieLiked);
 
                     // Writers
-                    globalInformation.writers = updateNonTimingAtributeValues(globalInformation.writers, movie.writers.split('- '), isMovieLiked);
+                    globalInformation.writers = updateNonTimingAttributeValues(globalInformation.writers, movie.writers.split('- '), isMovieLiked);
 
                     // Genre
-                    globalInformation.genre = updateNonTimingAtributeValues(globalInformation.genre, movie.genre.split(', '), isMovieLiked);
+                    globalInformation.genre = updateNonTimingAttributeValues(globalInformation.genre, movie.genre.split(', '), isMovieLiked);
 
                     // Rated
-                    globalInformation.rated = updateNonTimingAtributeValues(globalInformation.rated, [movie.rated], isMovieLiked);
+                    globalInformation.rated = updateNonTimingAttributeValues(globalInformation.rated, [movie.rated], isMovieLiked);
 
                     // IMDB
-                    globalInformation.imdb = updateNonTimingAtributeValues(globalInformation.imdb, [movie.imdbrating], isMovieLiked);
+                    globalInformation.imdb = updateNonTimingAttributeValues(globalInformation.imdb, [movie.imdbrating], isMovieLiked);
 
-                    // year [ on Decades ]  => Litle hack: We know there is not a movie before 1920, so we can just take the third number and add a zero.
-                    globalInformation.year = updateNonTimingAtributeValues(globalInformation.year, [movie.year.substr(2, 1) + '0'], isMovieLiked);
+                    // year [ on Decades ]  => Little hack: We know there is not a movie before 1920, so we can just take the third number and add a zero.
+                    globalInformation.year = updateNonTimingAttributeValues(globalInformation.year, [movie.year.substr(2, 1) + '0'], isMovieLiked);
 
                     // Idletime
-                    globalInformation.idletime = updateTimingAtributeValues(globalInformation.idletime, [movie.idletime], isMovieLiked);
+                    globalInformation.idletime = updateTimingAttributeValues(globalInformation.idletime, [movie.idletime], isMovieLiked);
 
                     // Runtime
-                    globalInformation.runtime = updateTimingAtributeValues(globalInformation.runtime, [movie.runtime], isMovieLiked);
+                    globalInformation.runtime = updateTimingAttributeValues(globalInformation.runtime, [movie.runtime], isMovieLiked);
 
                     // Talktime
-                    globalInformation.talktime = updateTimingAtributeValues(globalInformation.talktime, [movie.talktime], isMovieLiked);
+                    globalInformation.talktime = updateTimingAttributeValues(globalInformation.talktime, [movie.talktime], isMovieLiked);
                 });
 
+
                 var importance = {
-                    // Non time atributes
-                    actors: comparePositiveAtributes(globalInformation.actors, new_movie.actors.split('- ')),
-                    directors: comparePositiveAtributes(globalInformation.directors, new_movie.directors.split('- ')),
-                    writers: comparePositiveAtributes(globalInformation.writers, new_movie.writers.split('- ')),
-                    genre: comparePositiveAtributes(globalInformation.genre, new_movie.genre.split(', ')),
-                    rated: comparePositiveAtributes(globalInformation.rated, [new_movie.rated]),
-                    imdb: comparePositiveAtributes(globalInformation.imdb, [new_movie.imdbrating]),
-                    year: comparePositiveAtributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']),
-                    // Time atributes
-                    idletime: comparePositiveAtributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
-                    runtime: comparePositiveAtributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
-                    talktime: comparePositiveAtributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0'])
+                    // Non time attributes
+                    actors: comparePositiveAttributes(globalInformation.actors, new_movie.actors.split('- ')),
+                    directors: comparePositiveAttributes(globalInformation.directors, new_movie.directors.split('- ')),
+                    writers: comparePositiveAttributes(globalInformation.writers, new_movie.writers.split('- ')),
+                    genre: comparePositiveAttributes(globalInformation.genre, new_movie.genre.split(', ')),
+                    rated: comparePositiveAttributes(globalInformation.rated, [new_movie.rated]),
+                    imdb: comparePositiveAttributes(globalInformation.imdb, [new_movie.imdbrating]),
+                    year: comparePositiveAttributes(globalInformation.year, [new_movie.year.substr(2, 1) + '0']),
+                    // Time attributes
+                    idletime: comparePositiveAttributes(globalInformation.idletime, [new_movie.idletime.toString().slice(0, -1) + '0']),
+                    runtime: comparePositiveAttributes(globalInformation.runtime, [new_movie.runtime.toString().slice(0, -1) + '0']),
+                    talktime: comparePositiveAttributes(globalInformation.talktime, [new_movie.talktime.toString().slice(0, -1) + '0'])
                 };
 
                 resolve(importance);
@@ -189,7 +190,7 @@
 
                     updateArray.push({ id: value.id, rating: Math.round(rating * 1000) / 100 })
 
-                })
+                });
 
                 resolve(updateArray);
             })
@@ -197,57 +198,57 @@
     };
 
     // A function that returns an update object as this { x: numberOfTimesThatWasRepeated}
-    function updateNonTimingAtributeValues(globalAtribute, movieAtribute, likedOrNot) {
+    function updateNonTimingAttributeValues(globalAttribute, movieAttribute, likedOrNot) {
 
         // This variable is just an hack. Unfortunately the API used, sometimes duplicates values.
         var added = {};
 
-        movieAtribute.forEach(function(atr) {
+        movieAttribute.forEach(function(atr) {
 
             if (!added.hasOwnProperty(atr)) {
                 added[atr] = 0;
 
-                if (globalAtribute.hasOwnProperty(atr)) {
-                    globalAtribute[atr] += likedOrNot;
+                if (globalAttribute.hasOwnProperty(atr)) {
+                    globalAttribute[atr] += likedOrNot;
                 } else {
-                    globalAtribute[atr] = likedOrNot;
+                    globalAttribute[atr] = likedOrNot;
                 }
 
             }
         });
 
-        return globalAtribute;
-    };
+        return globalAttribute;
+    }
 
     // A function that returns an update object as this { x: numberOfTimesThatWasRepeated}
-    function updateTimingAtributeValues(globalAtribute, movieAtribute, likedOrNot) {
+    function updateTimingAttributeValues(globalAttribute, movieAttribute, likedOrNot) {
 
         // We are dividing by 10m intervals.
-        var timeInterval = movieAtribute.toString().slice(0, -1) + '0';
+        var timeInterval = movieAttribute.toString().slice(0, -1) + '0';
 
-        if (globalAtribute.hasOwnProperty(timeInterval)) {
-            globalAtribute[timeInterval] += likedOrNot;
+        if (globalAttribute.hasOwnProperty(timeInterval)) {
+            globalAttribute[timeInterval] += likedOrNot;
         } else {
-            globalAtribute[timeInterval] = likedOrNot;
+            globalAttribute[timeInterval] = likedOrNot;
         }
 
-        return globalAtribute;
-    };
+        return globalAttribute;
+    }
 
-    // A function that compares the new movie atributes with old information system we have
-    function comparePositiveAtributes(oldInformation, newInformation) {
+    // A function that compares the new movie attributes with old information system we have
+    function comparePositiveAttributes(oldInformation, newInformation) {
 
         var positiveBalanceOfParameters = 1,
             mostLikedAtr = '',
-            numberOfLikes_ofMost_successul_att = -1000,
+            numberOfLikes_ofMost_successful_att = -1000,
             numberOfLikesNewParamHave = 0,
             bonus = false; // A parameter has a bonus of 10% if a key of newly added movie is the most favorite
 
         // Get most value information on this parameter
         for (var atr in oldInformation) {
 
-            if (oldInformation[atr] > numberOfLikes_ofMost_successul_att) {
-                numberOfLikes_ofMost_successul_att = oldInformation[atr];
+            if (oldInformation[atr] > numberOfLikes_ofMost_successful_att) {
+                numberOfLikes_ofMost_successful_att = oldInformation[atr];
                 mostLikedAtr = atr;
             }
 
@@ -280,53 +281,6 @@
         return { importance: importance, balance: oldInformation, favorite: mostLikedAtr };
     }
 
-    // A function that compares new movie at atrivutes with old information we have
-    function compareNegativeAtributes(oldInformation, newInformation) {
-
-        var negativeBalanceOfParameters = 1,
-            mostDislikedAtr = '',
-            numberOfLikes_ofMost_successul_att = 1000,
-            numberOfLDislikesNewParamHave = 0,
-            bonus = false; // A parameter has a bonus of 10% if a key of newly added movie is the most favorite
-
-        // Get most value information on this parameter
-        for (var atr in oldInformation) {
-
-            if (oldInformation[atr] < numberOfLikes_ofMost_successul_att) {
-                numberOfLikes_ofMost_successul_att = oldInformation[atr];
-                mostDislikedAtr = atr;
-            }
-
-            if (oldInformation[atr] < 0) {
-                negativeBalanceOfParameters += Math.abs(oldInformation[atr]);
-            }
-        }
-
-        // Check newly added actors with the information we got above
-        newInformation.forEach(function(value) {
-
-            if (oldInformation.hasOwnProperty(value)) {
-
-                oldInformation[value] -= 1;
-
-                if (oldInformation[value] < 0) {
-                    numberOfLDislikesNewParamHave += Math.abs(oldInformation[value]);
-
-                    if (value == mostDislikedAtr) {
-                        bonus = true;
-                    }
-                }
-            }
-        });
-
-        var importance = (numberOfLDislikesNewParamHave / negativeBalanceOfParameters);
-
-        if (bonus && importance * 1.1 <= 1) importance = importance * 1.1;
-
-        return { importance: importance, balance: oldInformation, favorite: mostDislikedAtr };
-    }
-
-
     // A function that retrieves top importance scorer and bottom importance scorer.
     function top_bot_Scorer(importanceValues) {
 
@@ -344,14 +298,25 @@
     // A function that retrieves a value based on its content and on information we have.
     function contentValue(oldInformation, movieUnderReview) {
 
-        var contentValue = 0;
+        var contentValue = 0,
+            added = false;
 
         movieUnderReview.forEach(function(value) {
 
             if (oldInformation.hasOwnProperty(value) && oldInformation[value] > 0) {
                 contentValue++;
+                added = true;
+            } else if (oldInformation.hasOwnProperty(value) && oldInformation[value] < 0) {
+                contentValue--;
+                added = true;
             }
         });
+
+        var points = 0;
+
+        if (contentValue < 0) points = 0;
+        else if (contentValue == 0 && added) points = movieUnderReview.length / 2;
+        else if (contentValue >= 1) points = movieUnderReview.length;
 
         return contentValue / movieUnderReview.length;
     }

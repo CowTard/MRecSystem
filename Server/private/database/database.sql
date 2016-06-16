@@ -111,30 +111,3 @@ $create_rating_row$ LANGUAGE plpgsql;
 CREATE TRIGGER create_rating_row AFTER INSERT ON users
 	FOR ROW 
 	EXECUTE PROCEDURE insert_rating();
-
--- Para teste
-/*
-insert into predictions values('1','3','7');
-insert into predictions values('2','3','1');
-insert into predictions values('3','3','3');
-insert into predictions values('4','3','8');
-insert into predictions values('5','3','9');
-insert into predictions values('6','3','9');
-insert into predictions values('7','3','10');
-insert into predictions values('8','3','7');
-insert into predictions values('9','3','5');
-insert into predictions values('10','3','8');
-insert into predictions values('11','3','6');
-
-insert into predictions values('1','1','2');
-insert into predictions values('2','1','1');
-insert into predictions values('3','1','3');
-insert into predictions values('4','1','4');
-insert into predictions values('5','1','10');
-insert into predictions values('6','1','8');
-insert into predictions values('7','1','7');
-insert into predictions values('8','1','9');
-insert into predictions values('9','1','8');
-insert into predictions values('10','1','6');
-insert into predictions values('11','1','10');
-	*/
